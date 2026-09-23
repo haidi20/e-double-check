@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { PaymentsState } from '@/features/payments/type/paymentsTypes'
 
 export const paymentsState: PaymentsState = {
@@ -374,3 +375,11 @@ export const paymentsState: PaymentsState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('paymentsState', module, 'paymentsState')
+  })
+}
+

@@ -1,9 +1,11 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { deliveryOrdersState } from '@/features/distribution/delivery-orders/vm/deliveryOrdersState'
 
 export const useDeliveryOrdersVm = defineStore('deliveryOrdersVm', () => {
   const view = reactive({ ...deliveryOrdersState.view })
+  registerStateHmr(view, 'deliveryOrdersState')
 
   const filteredVehicleOptions = computed(() => {
     const keyword = view.vehicleSearch.trim().toLowerCase()
@@ -80,3 +82,5 @@ export const useDeliveryOrdersVm = defineStore('deliveryOrdersVm', () => {
     selectVehicle
   }
 })
+
+

@@ -1,3 +1,4 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import type { UsersTabId } from '@/features/settings/users/type/usersTypes'
@@ -5,6 +6,7 @@ import { usersState } from '@/features/settings/users/vm/usersState'
 
 export const useUsersVm = defineStore('usersVm', () => {
   const view = reactive({ ...usersState.view })
+  registerStateHmr(view, 'usersState')
 
   const openFormModal = () => {
     view.isFormModalOpen = true
@@ -45,3 +47,5 @@ export const useUsersVm = defineStore('usersVm', () => {
     saveFormModal
   }
 })
+
+

@@ -143,3 +143,18 @@ export interface AuthState extends FeatureContent {
   dummyData: DummyDataItem[]
   view: AuthView
 }
+
+export type AuthRole = 'admin' | 'employee'
+
+export interface AuthRoleOption {
+  value: AuthRole
+  label: string
+  description: string
+  icon: string
+}
+
+export interface AuthLoginState {
+  selectedRole: AuthRole | null
+  isLoading: boolean
+  roleOptions: AuthRoleOption[]
+}

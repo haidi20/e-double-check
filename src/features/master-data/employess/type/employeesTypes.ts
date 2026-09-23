@@ -49,7 +49,6 @@ export interface EmployeeRow {
   name: string
   role: string
   department: string
-  score: string
   status: string
 }
 
@@ -127,7 +126,6 @@ export interface EmployeesView extends FeatureContent {
   headingTitle: string
   primaryActionLabel: string
   dummyData: DummyDataItem[]
-  employeeSummary: SummaryCard[]
   employeeRows: EmployeeRow[]
   formTitle: string
   formSubtitle: string

@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { VehiclesState } from '@/features/master-data/vehicles/type/vehiclesTypes'
 
 const dummyData = [
@@ -287,3 +288,11 @@ export const vehiclesState: VehiclesState = {
     }
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('vehiclesState', module, 'vehiclesState')
+  })
+}
+

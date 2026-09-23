@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { MatrixKpiState } from '@/features/matrix-kpi/type/matrixKpiTypes'
 
 const actions = [
@@ -178,3 +179,11 @@ export const matrixKpiState: MatrixKpiState = {
     isFormSubmitted: false
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('matrixKpiState', module, 'matrixKpiState')
+  })
+}
+

@@ -53,7 +53,7 @@ const vm = useMatrixKpiVm()
       <div class="data-table data-table--kpi-invoices" role="table" aria-label="Daftar faktur KPI">
         <div class="data-table__row data-table__row--head" role="row">
           <span>No Faktur</span>
-          <span>Outlet</span>
+          <span>Warung</span>
           <span>Faktur dibuat</span>
           <span>Status</span>
           <span>Durasi</span>

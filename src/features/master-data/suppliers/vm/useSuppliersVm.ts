@@ -1,9 +1,11 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { suppliersState } from '@/features/master-data/suppliers/vm/suppliersState'
 
 export const useSuppliersVm = defineStore('suppliersVm', () => {
   const view = reactive({ ...suppliersState.view })
+  registerStateHmr(view, 'suppliersState')
 
   const openFormModal = () => {
     view.isFormModalOpen = true
@@ -39,3 +41,5 @@ export const useSuppliersVm = defineStore('suppliersVm', () => {
     saveFormModal
   }
 })
+
+

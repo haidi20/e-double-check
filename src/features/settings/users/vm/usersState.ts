@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { UsersState } from '@/features/settings/users/type/usersTypes'
 
 export const usersState: UsersState = {
@@ -447,3 +448,11 @@ export const usersState: UsersState = {
     accountEnabledValue: "Ya"
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('usersState', module, 'usersState')
+  })
+}
+

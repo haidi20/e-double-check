@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { EmployeesState } from '@/features/master-data/employess/type/employeesTypes'
 
 export const employeesState: EmployeesState = {
@@ -133,7 +134,7 @@ export const employeesState: EmployeesState = {
       }
     ],
     mode: "employee",
-    headingTitle: "Master Pegawai & Performa KPI",
+    headingTitle: "Master Pegawai",
     primaryActionLabel: "Tambah Pegawai Baru",
     dummyData: [
       {
@@ -227,30 +228,12 @@ export const employeesState: EmployeesState = {
         description: "Menyimpan identitas dan informasi kontak pegawai."
       }
     ],
-    employeeSummary: [
-      {
-        label: "Total Pegawai",
-        value: "43",
-        description: "Aktif di operasional gudang dan distribusi."
-      },
-      {
-        label: "Rata-rata KPI",
-        value: "91%",
-        description: "Pencapaian individu bulan ini."
-      },
-      {
-        label: "Dalam Tugas",
-        value: "18",
-        description: "Terhubung dengan rute aktif."
-      }
-    ],
     employeeRows: [
       {
         initials: "BS",
         name: "Budi Santoso",
         role: "Koordinator Gudang",
         department: "Gudang",
-        score: "96%",
         status: "Aktif"
       },
       {
@@ -258,7 +241,6 @@ export const employeesState: EmployeesState = {
         name: "Siti Wahyuni",
         role: "Admin Distribusi",
         department: "Operasional",
-        score: "91%",
         status: "Aktif"
       },
       {
@@ -266,7 +248,6 @@ export const employeesState: EmployeesState = {
         name: "Andi Pratama",
         role: "Kurir Utama",
         department: "Pengiriman",
-        score: "87%",
         status: "Dalam tugas"
       },
       {
@@ -274,7 +255,6 @@ export const employeesState: EmployeesState = {
         name: "Rina Melati",
         role: "Staf Dokumen",
         department: "Administrasi",
-        score: "89%",
         status: "Aktif"
       },
       {
@@ -282,7 +262,6 @@ export const employeesState: EmployeesState = {
         name: "Dewi Kartika",
         role: "Analis Persediaan",
         department: "Gudang",
-        score: "93%",
         status: "Aktif"
       },
       {
@@ -290,7 +269,6 @@ export const employeesState: EmployeesState = {
         name: "Fajar Nugroho",
         role: "Pengawas Armada",
         department: "Pengiriman",
-        score: "86%",
         status: "Dalam tugas"
       },
       {
@@ -298,7 +276,6 @@ export const employeesState: EmployeesState = {
         name: "Nadia Putri",
         role: "Admin Pembayaran",
         department: "Keuangan",
-        score: "90%",
         status: "Aktif"
       },
       {
@@ -306,7 +283,6 @@ export const employeesState: EmployeesState = {
         name: "Raka Saputra",
         role: "Supervisor Distribusi",
         department: "Operasional",
-        score: "95%",
         status: "Aktif"
       },
       {
@@ -314,7 +290,6 @@ export const employeesState: EmployeesState = {
         name: "Maya Lestari",
         role: "Staf Layanan",
         department: "Pelanggan",
-        score: "84%",
         status: "Dalam tugas"
       },
       {
@@ -322,7 +297,6 @@ export const employeesState: EmployeesState = {
         name: "Agus Salim",
         role: "Kurir Prioritas",
         department: "Pengiriman",
-        score: "88%",
         status: "Aktif"
       }
     ],
@@ -370,3 +344,11 @@ export const employeesState: EmployeesState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('employeesState', module, 'employeesState')
+  })
+}
+

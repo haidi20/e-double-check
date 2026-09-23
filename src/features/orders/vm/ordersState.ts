@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { OrdersState } from '@/features/orders/type/ordersTypes'
 
 const dummyData = [
@@ -490,3 +491,11 @@ export const ordersState: OrdersState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('ordersState', module, 'ordersState')
+  })
+}
+

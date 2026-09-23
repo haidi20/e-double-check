@@ -1,4 +1,4 @@
-export interface FeatureAction {
+﻿export interface FeatureAction {
   title: string
   description: string
 }
@@ -49,6 +49,34 @@ export interface DashboardDeliveryOrderItem {
   customer: string
   detail: string
   status: string
+  icon: string
+}
+
+export interface DashboardQuickAction {
+  id: string
+  label: string
+  routePath: string
+  icon: string
+}
+
+export interface DashboardAccountCategory {
+  id: string
+  label: string
+  icon: string
+}
+
+export interface DashboardFavoriteItem {
+  id: string
+  label: string
+  icon: string
+  routePath: string
+  badge?: string
+}
+
+export interface DashboardBottomItem {
+  id: string
+  label: string
+  routePath: string
   icon: string
 }
 
@@ -148,6 +176,15 @@ export interface DashboardFormField {
   options?: string[]
 }
 
+export interface DashboardActivity {
+  id: string
+  title: string
+  description: string
+  dateLabel: string
+  valueLabel: string
+  valueClass?: string
+}
+
 export interface DashboardView extends FeatureContent {
   mode: 'dashboard'
   headingTitle: string
@@ -161,6 +198,7 @@ export interface DashboardView extends FeatureContent {
   dashboardMetrics: MetricItem[]
   trendItems: DashboardTrendItem[]
   dashboardOrders: DataRow[]
+  dashboardActivities: DashboardActivity[]
   formTitle: string
   formSubtitle: string
   formSubmitLabel: string
@@ -168,9 +206,26 @@ export interface DashboardView extends FeatureContent {
   isFormModalOpen: boolean
   isFormSubmitted: boolean
   formFields: DashboardFormField[]
+  profileInitials: string
+  profileName: string
+  profilePoints: string
+  accountCategories: DashboardAccountCategory[]
+  activeAccountCategoryId: string
+  accountName: string
+  accountBalance: string
+  isBalanceVisible: boolean
+  favoriteItems: DashboardFavoriteItem[]
+  quickActions: DashboardQuickAction[]
+  bottomItems: DashboardBottomItem[]
+  activeBottomItemId: string
+  promoLabel: string
 }
 
 export interface DashboardState extends FeatureContent {
   dummyData: DummyDataItem[]
   view: DashboardView
 }
+
+
+
+

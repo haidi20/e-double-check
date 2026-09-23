@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { AuthState } from '@/features/auth/type/authTypes'
 
 export const authState: AuthState = {
@@ -324,3 +325,11 @@ export const authState: AuthState = {
     accessEnabledValue: "Ya"
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('authState', module, 'authState')
+  })
+}
+

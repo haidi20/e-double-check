@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { RolesState } from '@/features/settings/roles/type/rolesTypes'
 
 export const rolesState: RolesState = {
@@ -392,3 +393,11 @@ export const rolesState: RolesState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('rolesState', module, 'rolesState')
+  })
+}
+

@@ -1,3 +1,4 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { matrixKpiState } from '@/features/matrix-kpi/vm/matrixKpiState'
@@ -5,6 +6,7 @@ import type { InvoiceTimingTab } from '@/features/matrix-kpi/type/matrixKpiTypes
 
 export const useMatrixKpiVm = defineStore('matrixKpiVm', () => {
   const view = reactive({ ...matrixKpiState.view })
+  registerStateHmr(view, 'matrixKpiState')
 
   const slaTotalHours = computed(() => view.slaDays * view.slaHours)
   const slaLabel = computed(() => `${view.slaDays}x${view.slaHours} jam (${slaTotalHours.value} jam)`)
@@ -60,3 +62,5 @@ export const useMatrixKpiVm = defineStore('matrixKpiVm', () => {
     updateSlaHours
   }
 })
+
+

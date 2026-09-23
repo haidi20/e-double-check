@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { InventoryState } from '@/features/inventory/type/inventoryTypes'
 
 export const inventoryState: InventoryState = {
@@ -355,3 +356,11 @@ export const inventoryState: InventoryState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('inventoryState', module, 'inventoryState')
+  })
+}
+

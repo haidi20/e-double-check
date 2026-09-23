@@ -1,3 +1,4 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import type { VehicleFormDraft } from '@/features/master-data/vehicles/type/vehiclesTypes'
@@ -5,6 +6,7 @@ import { vehiclesState } from '@/features/master-data/vehicles/vm/vehiclesState'
 
 export const useVehiclesVm = defineStore('vehiclesVm', () => {
   const view = reactive({ ...vehiclesState.view })
+  registerStateHmr(view, 'vehiclesState')
 
   const openFormModal = () => {
     view.isFormModalOpen = true
@@ -39,3 +41,5 @@ export const useVehiclesVm = defineStore('vehiclesVm', () => {
     saveFormModal
   }
 })
+
+

@@ -1,3 +1,4 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { ordersState } from '@/features/orders/vm/ordersState'
@@ -5,6 +6,7 @@ import type { OrderManualItem, OrderReturnItem } from '@/features/orders/type/or
 
 export const useOrdersVm = defineStore('ordersVm', () => {
   const view = reactive({ ...ordersState.view })
+  registerStateHmr(view, 'ordersState')
   let manualItemSequence = view.formManual.items.length
 
   const fallbackPreviewUrl = '/files/faktur.jpeg'
@@ -403,3 +405,5 @@ export const useOrdersVm = defineStore('ordersVm', () => {
     saveReturnModal
   }
 })
+
+

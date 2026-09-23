@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { DashboardState } from '@/features/dashboard/type/dashboardTypes'
 
 export const dashboardState: DashboardState = {
@@ -135,9 +136,9 @@ export const dashboardState: DashboardState = {
     mode: "dashboard",
     headingTitle: "Halaman Utama",
     primaryActionLabel: "Pesanan Kerja Baru",
-    chartEyebrow: "Grafik Operasional",
-    chartTitle: "Tren pesanan 7 hari terakhir",
-    chartStatus: "Stabil",
+    chartEyebrow: "Aktivitas checklist",
+    chartTitle: "Progres checklist 7 hari terakhir",
+    chartStatus: "Berjalan",
     deliveryOrderEyebrow: "Surat Jalan",
     deliveryOrderTitle: "Surat jalan hari ini",
     dummyData: [
@@ -234,36 +235,36 @@ export const dashboardState: DashboardState = {
     ],
     dashboardMetrics: [
       {
-        label: "Pesanan Masuk",
-        value: "1.284",
-        trend: "+12%",
-        icon: "PM",
-        progress: 78,
-        progressWidth: "78%"
+        label: "Sesi checklist aktif",
+        value: "12",
+        trend: "+3 hari ini",
+        icon: "SC",
+        progress: 75,
+        progressWidth: "75%"
       },
       {
-        label: "Pesanan Diproses",
-        value: "842",
-        trend: "Stabil",
-        icon: "PD",
-        progress: 65,
-        progressWidth: "65%"
+        label: "Checklist selesai",
+        value: "86%",
+        trend: "+8% minggu ini",
+        icon: "✓",
+        progress: 86,
+        progressWidth: "86%"
       },
       {
-        label: "Rata-rata Waktu",
-        value: "4,2 jam",
-        trend: "-4%",
-        icon: "RW",
-        progress: 52,
-        progressWidth: "52%"
+        label: "Insiden terbuka",
+        value: "4",
+        trend: "2 perlu tindak lanjut",
+        icon: "IN",
+        progress: 35,
+        progressWidth: "35%"
       },
       {
-        label: "Skor KPI",
-        value: "94,8%",
-        trend: "Sangat Baik",
-        icon: "SK",
-        progress: 94,
-        progressWidth: "94%"
+        label: "Outlet aktif",
+        value: "8",
+        trend: "Semua terpantau",
+        icon: "OT",
+        progress: 100,
+        progressWidth: "100%"
       }
     ],
     trendItems: [
@@ -385,7 +386,32 @@ export const dashboardState: DashboardState = {
         amount: "27 koli"
       }
     ],
-    formTitle: "Pesanan kerja baru",
+    dashboardActivities: [
+      {
+        id: "activity-session-1",
+        title: "Sesi pagi Outlet Panakkukang",
+        description: "Persiapan shift sedang diisi oleh Andi Pratama.",
+        dateLabel: "Hari ini, 07:15",
+        valueLabel: "68%",
+        valueClass: "status-pill"
+      },
+      {
+        id: "activity-incident-1",
+        title: "Insiden pesanan tidak lengkap",
+        description: "Sambal matah belum tercatat pada pesanan TA-1042.",
+        dateLabel: "Hari ini, 10:42",
+        valueLabel: "Perlu tindak lanjut",
+        valueClass: "status-pill status-pill--warning"
+      },
+      {
+        id: "activity-session-2",
+        title: "Penutupan shift malam",
+        description: "Menunggu pemeriksaan akhir dari kapten outlet.",
+        dateLabel: "Kemarin, 22:10",
+        valueLabel: "Menunggu",
+        valueClass: "status-pill"
+      }
+    ],    formTitle: "Pesanan kerja baru",
     formSubtitle: "Formulir Cepat",
     formSubmitLabel: "Simpan Pesanan Kerja",
     formSuccessMessage: "Pesanan kerja berhasil disimpan sebagai draft.",
@@ -421,6 +447,48 @@ export const dashboardState: DashboardState = {
         rows: 4,
         wide: true
       }
-    ]
+    ],
+    profileInitials: "HN",
+    profileName: "HAIDI NURHADINATA",
+    profilePoints: "105 livin' poin",
+    accountCategories: [
+      { id: "savings", label: "Tabungan", icon: "Rp" },
+      { id: "deposit", label: "Deposito", icon: "o" },
+      { id: "credit-card", label: "Kartu Kredit", icon: "=" },
+      { id: "loan", label: "Pinjaman", icon: "%" },
+      { id: "investment", label: "Investasi", icon: "I" },
+    ],
+    activeAccountCategoryId: "savings",
+    accountName: "Tabungan Mandiri",
+    accountBalance: "Rp *****",
+    isBalanceVisible: false,
+    favoriteItems: [
+      { id: "dashboard", label: "Dashboard", icon: "H", routePath: "/dashboard" },
+      { id: "questions", label: "Daftar Pertanyaan", icon: "?", routePath: "/checklist" },
+      { id: "answer-types", label: "Tipe jawaban", icon: "A", routePath: "/checklist-tipe-jawaban" },
+      { id: "services", label: "Layanan", icon: "L", routePath: "/checklist-layanan" },
+      { id: "outlets", label: "Warung", icon: "O", routePath: "/outlets" },
+      { id: "employees", label: "Pegawai", icon: "P", routePath: "/employees" }
+    ],
+    quickActions: [
+      { id: "questions", label: "Daftar Pertanyaan", routePath: "/checklist", icon: "M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" },
+      { id: "history", label: "Riwayat", routePath: "/reports", icon: "M4 5h16v14H4zM8 3v4M16 3v4M7 11h3M14 11h3M7 15h3" }
+    ],
+    bottomItems: [
+      { id: "home", label: "Beranda", routePath: "/dashboard", icon: "M3 10 12 3l9 7v10H3V10Zm6 10v-6h6v6" },
+      { id: "products", label: "Produk Anda", routePath: "/products", icon: "M4 8h16v12H4zM7 8V6a5 5 0 0 1 10 0v2M8 13h8" },
+      { id: "favorite", label: "Sukha", routePath: "/roles", icon: "M12 21s-7-4.4-9-9.2C1.5 8.2 3.7 5 7 5c2 0 3.4 1.1 5 2.8C13.6 6.1 15 5 17 5c3.3 0 5.5 3.2 4 6.8C19 16.6 12 21 12 21Z" },
+      { id: "loyalty", label: "Loyalty", routePath: "/reports", icon: "M4 17a8 8 0 1 1 16 0M7 17a5 5 0 1 1 10 0M10 17a2 2 0 1 1 4 0" }
+    ],
+    activeBottomItemId: "home",
+    promoLabel: "Baru! Belanja di mana saja tinggal tap HP"
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('dashboardState', module, 'dashboardState')
+  })
+}
+

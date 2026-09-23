@@ -1,4 +1,4 @@
-import type { RouteComponent } from 'vue-router'
+﻿import type { RouteComponent } from 'vue-router'
 import type { AppState, NavigationComponent } from '@/core/type/appTypes'
 
 const lazyView = (loader: () => Promise<{ default: RouteComponent }>): NavigationComponent => {
@@ -25,7 +25,16 @@ export const appState: AppState = {
       section: 'Utama',
       routePath: '/dashboard',
       icon: 'M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z',
-      component: lazyView(() => import('@/features/dashboard/screen/DashboardScreen.vue'))
+      component: lazyView(() => import('@/features/dashboard/screen/DashboardRouteScreen.vue'))
+    },
+    {
+      id: 'checklist',
+      label: 'Daftar Pertanyaan',
+      shortLabel: 'Pertanyaan',
+      section: 'Operasional',
+      routePath: '/checklist',
+      icon: 'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',
+      component: lazyView(() => import('@/features/checklist/screen/ChecklistQuestionsScreen.vue'))
     },
     {
       id: 'orders',
@@ -143,3 +152,4 @@ export const appState: AppState = {
     }
   ]
 }
+

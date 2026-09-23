@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { ProcurementState } from '@/features/procurement/type/procurementTypes'
 
 export const procurementState: ProcurementState = {
@@ -374,3 +375,11 @@ export const procurementState: ProcurementState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('procurementState', module, 'procurementState')
+  })
+}
+

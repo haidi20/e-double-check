@@ -1,3 +1,4 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import type { DashboardDeliveryOrderItem, DashboardLineChart } from '@/features/dashboard/type/dashboardTypes'
@@ -6,6 +7,7 @@ import { deliveryOrdersState } from '@/features/distribution/delivery-orders/vm/
 
 export const useDashboardVm = defineStore('dashboardVm', () => {
   const view = reactive({ ...dashboardState.view })
+  registerStateHmr(view, 'dashboardState')
   const visibleDeliveryOrderLimit = 5
 
   const trendChart = computed<DashboardLineChart>(() => {
@@ -72,6 +74,22 @@ export const useDashboardVm = defineStore('dashboardVm', () => {
 
   const deliveryOrderEmptyMessage = computed(() => 'Belum ada data surat jalan untuk ditampilkan.')
 
+  const activeAccountCategory = computed(() =>
+    view.accountCategories.find((item) => item.id === view.activeAccountCategoryId) ?? view.accountCategories[0]
+  )
+
+  const setAccountCategory = (categoryId: string) => {
+    view.activeAccountCategoryId = categoryId
+  }
+
+  const toggleBalance = () => {
+    view.isBalanceVisible = !view.isBalanceVisible
+  }
+
+  const setActiveBottomItem = (itemId: string) => {
+    view.activeBottomItemId = itemId
+  }
+
   const openFormModal = () => {
     view.isFormModalOpen = true
     view.isFormSubmitted = false
@@ -103,6 +121,10 @@ export const useDashboardVm = defineStore('dashboardVm', () => {
     deliveryOrderItems,
     deliveryOrderTotalLabel,
     deliveryOrderEmptyMessage,
+    activeAccountCategory,
+    setAccountCategory,
+    toggleBalance,
+    setActiveBottomItem,
     view,
     openFormModal,
     closeFormModal,
@@ -110,3 +132,7 @@ export const useDashboardVm = defineStore('dashboardVm', () => {
     saveFormModal
   }
 })
+
+
+
+

@@ -20,7 +20,7 @@ const vm = useCustomersVm()
       <article class="panel">
         <span class="tile-icon">PL</span>
         <h3>Total pelanggan</h3>
-        <p>10 data pelanggan outlet aktif dan perlu ditinjau.</p>
+        <p>10 data pelanggan warung aktif dan perlu ditinjau.</p>
       </article>
       <article class="panel">
         <span class="tile-icon">AR</span>

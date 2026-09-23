@@ -1,9 +1,11 @@
+﻿import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { reportsState } from '@/features/reports/vm/reportsState'
 
 export const useReportsVm = defineStore('reportsVm', () => {
   const view = reactive({ ...reportsState.view })
+  registerStateHmr(view, 'reportsState')
 
   const activeTab = computed(() => {
     return view.tabs.find((tab) => tab.id === view.activeTabId) ?? view.tabs[0]
@@ -52,3 +54,5 @@ export const useReportsVm = defineStore('reportsVm', () => {
     saveFormModal
   }
 })
+
+

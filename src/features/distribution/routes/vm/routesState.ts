@@ -1,3 +1,4 @@
+﻿import { syncStateHmr } from '@/core/vm/registerStateHmr'
 import type { RoutesState } from '@/features/distribution/routes/type/routesTypes'
 
 export const routesState: RoutesState = {
@@ -374,3 +375,11 @@ export const routesState: RoutesState = {
     ]
   }
 }
+
+
+if (import.meta.hot) {
+  import.meta.hot.accept((module) => {
+    syncStateHmr('routesState', module, 'routesState')
+  })
+}
+
