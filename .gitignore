@@ -8,3 +8,4 @@ vite-check.log
 .mcp.local.json
 .vscode/mcp.local.json
 .codex/
+.tmp/

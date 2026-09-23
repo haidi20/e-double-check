@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SearchableSelect from '@/core/components/SearchableSelect.vue'
 import { useOutletsVm } from '@/features/master-data/outlets/vm/useOutletsVm'
 
 const vm = useOutletsVm()
@@ -22,19 +23,13 @@ const vm = useOutletsVm()
           class="feature-form-modal__field"
         >
           {{ field.label }}
-          <select
+          <SearchableSelect
             v-if="field.type === 'select'"
-            class="feature-form-modal__select"
+            :placeholder="field.id === 'owner' ? 'Pilih pegawai' : 'Pilih status'"
+            :search-placeholder="field.id === 'owner' ? 'Cari pegawai' : 'Cari status'"
+            :options="field.options"
             v-model="field.value"
-          >
-            <option
-              v-for="option in field.options"
-              :key="option"
-              :value="option"
-            >
-              {{ option }}
-            </option>
-          </select>
+          />
           <input
             v-else
             type="text"
