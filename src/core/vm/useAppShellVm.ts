@@ -24,25 +24,19 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     () => route.name === 'dashboard' && authVm.selectedRole === 'employee'
   )
 
-  const desktopNavigationSections = computed<ShellNavigationSection[]>(() => {
-    if (!isCompactSidebarRoute.value) {
-      return appVm.navigationSections
+  const desktopNavigationSections = computed<ShellNavigationSection[]>(() => [
+    {
+      title: 'Menu Daftar Pertanyaan',
+      placement: 'main',
+      items: dashboardVm.view.favoriteItems.map((item) => ({
+        id: item.id,
+        label: item.label,
+        shortLabel: item.label,
+        routePath: item.routePath,
+        icon: view.compactSidebarIcons[item.id] ?? view.compactSidebarDefaultIcon
+      }))
     }
-
-    return [
-      {
-        title: 'Menu Daftar Pertanyaan',
-        placement: 'main',
-        items: dashboardVm.view.favoriteItems.map((item) => ({
-          id: item.id,
-          label: item.label,
-          shortLabel: item.label,
-          routePath: item.routePath,
-          icon: view.compactSidebarIcons[item.id] ?? view.compactSidebarDefaultIcon
-        }))
-      }
-    ]
-  })
+  ])
 
   watch(
     () => route.query.role,

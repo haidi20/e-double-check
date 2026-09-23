@@ -1,4 +1,4 @@
-﻿import type { RouteComponent } from 'vue-router'
+import type { RouteComponent } from 'vue-router'
 import type { AppState, NavigationComponent } from '@/core/type/appTypes'
 
 const lazyView = (loader: () => Promise<{ default: RouteComponent }>): NavigationComponent => {
@@ -124,6 +124,14 @@ export const appState: AppState = {
       routePath: '/outlets',
       icon: 'M4 20V8l8-5 8 5v12H4ZM8 20v-6h8v6M8 10h2M14 10h2',
       component: lazyView(() => import('@/features/master-data/outlets/screen/OutletsScreen.vue'))
+    },
+    {
+      id: 'services',
+      label: 'Layanan',
+      section: 'Master',
+      routePath: '/layanan',
+      icon: 'M12 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM5 21a7 7 0 0 1 14 0M4 12h4M16 12h4',
+      component: lazyView(() => import('@/features/master-data/services/screen/ServicesScreen.vue'))
     },
     {
       id: 'vehicles',

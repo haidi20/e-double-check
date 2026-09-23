@@ -13,7 +13,6 @@ const vm = useDashboardVm()
         <h2>Dashboard Daftar Pertanyaan</h2>
         <p>Ringkasan kategori checklist, pertanyaan aktif, dan aktivitas konfigurasi.</p>
       </div>
-      <RouterLink to="/checklist" class="primary-button">Kelola Daftar Pertanyaan</RouterLink>
     </section>
 
     <section class="metric-grid" aria-label="Ringkasan checklist operasional">
@@ -38,24 +37,14 @@ const vm = useDashboardVm()
       </div>
       <div class="line-chart" aria-label="Grafik progres checklist tujuh hari terakhir">
         <div class="line-chart__plot">
-          <svg
-            class="line-chart__svg"
-            :viewBox="vm.trendChart.viewBox"
-            preserveAspectRatio="none"
-            role="img"
-            aria-label="Grafik garis progres checklist mingguan"
-          >
+          <svg class="line-chart__svg" :viewBox="vm.trendChart.viewBox" preserveAspectRatio="none" role="img"
+            aria-label="Grafik garis progres checklist mingguan">
             <path class="line-chart__grid" :d="vm.trendChart.gridPath" />
             <path class="line-chart__area" :d="vm.trendChart.areaPath" />
             <path class="line-chart__line" :d="vm.trendChart.linePath" />
           </svg>
-          <span
-            v-for="point in vm.trendChart.points"
-            :key="point.id"
-            class="line-chart__point"
-            :style="{ left: point.xPercent, top: point.yPercent }"
-            aria-hidden="true"
-          ></span>
+          <span v-for="point in vm.trendChart.points" :key="point.id" class="line-chart__point"
+            :style="{ left: point.xPercent, top: point.yPercent }" aria-hidden="true"></span>
         </div>
         <div class="line-chart__labels" :style="{ gridTemplateColumns: vm.trendChart.labelColumns }" aria-hidden="true">
           <span v-for="point in vm.trendChart.points" :key="point.id">{{ point.label }}</span>

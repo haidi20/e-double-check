@@ -559,7 +559,15 @@
 }
 
 .data-table--master .data-table__row {
-  grid-template-columns: 120px minmax(220px, 1fr) 170px 140px 170px;
+  grid-template-columns: 80px minmax(180px, 1fr) minmax(260px, 1.6fr) 100px 170px;
+}
+
+.data-table--master .data-table__row > span:nth-child(3) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .data-table--customers .data-table__row {

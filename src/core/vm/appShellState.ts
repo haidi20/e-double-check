@@ -3,7 +3,7 @@ import type { AppShellUiState } from '@/core/type/appTypes'
 export const appShellState: AppShellUiState = {
   isProfileMenuOpen: false,
   isQuickActionOpen: false,
-  compactSidebarRouteNames: ['dashboard', 'employees', 'outlets'],
+  compactSidebarRouteNames: ['dashboard', 'checklist', 'orders', 'delivery-orders', 'kpi', 'reports', 'doc', 'products', 'customers', 'inventory', 'warehouses', 'outlets', 'services', 'vehicles', 'employees', 'users', 'roles'],
   compactSidebarIcons: {
     checklist: 'M6 3h12v18H6zM9 7h6M9 11h4M9 15h6',
     categories: 'M4 6h16v4H4zM4 12h16v4H4zM4 18h16v2H4z',
