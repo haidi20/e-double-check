@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-ssr
+*.local
+vite-dev.log
+vite-dev.err
+.mcp.local.json
+.vscode/mcp.local.json
+.codex/
