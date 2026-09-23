@@ -118,6 +118,14 @@ export const appState: AppState = {
       component: lazyView(() => import('@/features/master-data/warehouses/screen/WarehousesScreen.vue'))
     },
     {
+      id: 'outlets',
+      label: 'Warung',
+      section: 'Master',
+      routePath: '/outlets',
+      icon: 'M4 20V8l8-5 8 5v12H4ZM8 20v-6h8v6M8 10h2M14 10h2',
+      component: lazyView(() => import('@/features/master-data/outlets/screen/OutletsScreen.vue'))
+    },
+    {
       id: 'vehicles',
       label: 'Kendaraan',
       section: 'Master',
