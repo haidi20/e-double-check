@@ -158,7 +158,26 @@ export const useQuestionVm = defineStore('questionVm', () => {
       return view.answers[answerKey]
     }
 
-    return getQuestion(questionId)?.values?.[columnId] ?? ''
+    const question = getQuestion(questionId)
+    const storedValue = question?.values?.[columnId]
+
+    if (storedValue !== undefined && storedValue !== '') {
+      return storedValue
+    }
+
+    const category = checklistVm.view.categories.find((item) => item.id === question?.categoryId)
+    const column = category?.columns.find((item) => item.id === columnId)
+    const label = column?.label.trim().toLowerCase()
+
+    if (label === 'pelaksana') {
+      return question?.executor ?? ''
+    }
+
+    if (label === 'kontrol') {
+      return question?.controller ?? ''
+    }
+
+    return storedValue ?? ''
   }
 
   const setAnswerValue = (questionId: string, columnId: string, value: ChecklistQuestionValue) => {

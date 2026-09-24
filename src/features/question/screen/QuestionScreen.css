@@ -524,13 +524,10 @@
 
 .question-answer-fields__choice {
   align-items: center;
-  background: #f8fafc;
-  border: 1px solid #e8ebf0;
-  border-radius: 12px;
   display: inline-flex;
   gap: 8px;
-  min-height: 38px;
-  padding: 8px 10px;
+  min-height: 28px;
+  padding: 2px 0;
 }
 
 .question-answer-fields__choice input {
