@@ -11,7 +11,7 @@ export interface ColumnFormState {
 export const columnFormState: ColumnFormState = {
   label: '',
   type: 'text',
-  mode: 'input',
+  mode: 'read-only',
   required: false,
   error: ''
 }

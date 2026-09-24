@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
+import type { ChecklistColumn } from '@/features/checklist/type/checklistTypes'
 import { categoryQuestionsModalState } from '@/features/checklist/state/categoryQuestionsModalState'
 import { useChecklistQuestionsByCategoryVm } from '@/features/checklist/vm/useChecklistQuestionsByCategoryVm'
 import { useQuestionFormVm } from '@/features/checklist/vm/useQuestionFormVm'
@@ -11,7 +12,36 @@ export const useCategoryQuestionsModalVm = defineStore('categoryQuestionsModalVm
 
   const category = computed(() => categoryVm.category)
   const form = computed(() => questionFormVm.form)
-  const fields = computed(() => questionFormVm.fields)
+  const fields = computed(() =>
+    questionFormVm.fields.filter(
+      (column) => !['no', 'nomor'].includes(column.label.trim().toLowerCase())
+    )
+  )
+  const serviceOptions = computed(() => questionFormVm.serviceOptions)
+
+  const isServiceColumn = (column: ChecklistColumn) =>
+    column.type === 'text' && column.label.trim().toLowerCase() === 'layanan'
+
+  const isQuestionColumn = (column: ChecklistColumn) =>
+    column.type === 'text' &&
+    ['item yang dicek', 'langkah', 'item', 'tindakan', 'pertanyaan'].some((keyword) =>
+      column.label.trim().toLowerCase().includes(keyword)
+    )
+
+  const getQuestionValue = (columnId: string) =>
+    String(questionFormVm.form.values[columnId] ?? '')
+
+  const updateQuestionValue = (columnId: string, event: Event) => {
+    const target = event.target
+    questionFormVm.form.values[columnId] =
+      target instanceof HTMLTextAreaElement ? target.value : ''
+  }
+
+  const getServiceValue = (columnId: string) => String(questionFormVm.form.values[columnId] ?? '')
+
+  const setServiceValue = (columnId: string, value: string) => {
+    questionFormVm.form.values[columnId] = value
+  }
   const error = computed(() => questionFormVm.error)
   const isEditing = computed(() => questionFormVm.isEditing)
 
@@ -44,6 +74,13 @@ export const useCategoryQuestionsModalVm = defineStore('categoryQuestionsModalVm
     category,
     form,
     fields,
+    serviceOptions,
+    isServiceColumn,
+    isQuestionColumn,
+    getQuestionValue,
+    updateQuestionValue,
+    getServiceValue,
+    setServiceValue,
     error,
     isEditing,
     open,

@@ -31,8 +31,8 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
   }
 
   const columnModeLabels: Record<ChecklistColumnMode, string> = {
-    input: 'Input',
-    'read-only': 'Read-only'
+    input: 'Admin',
+    'read-only': 'Karyawan'
   }
 
   const formatColumnType = (column: ChecklistColumn) =>

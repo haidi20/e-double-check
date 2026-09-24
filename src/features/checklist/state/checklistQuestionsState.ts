@@ -15,87 +15,81 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
   categories: [
     {
       id: 'persiapan-shift',
-      name: 'Persiapan Shift',
+      name: 'A. Prepare Awal Shift (30-60 menit sebelum buka)',
       description: 'Kesiapan stasiun nasi, sambal, ayam, dan ganje sebelum outlet buka (30-60 menit sebelum buka).',
       questionCount: 15,
       isVisible: true,
       columns: [
-        { id: 'col-no-1', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-1', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-1', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-item-1', label: 'Item yang dicek', type: 'text', mode: 'input', required: true },
-        { id: 'col-ya-1', label: 'Ya', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-tidak-1', label: 'Tidak', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-executor-1', label: 'Pelaksana', type: 'text', mode: 'input', required: true },
-        { id: 'col-controller-1', label: 'Kontrol', type: 'text', mode: 'input', required: true }
+        { id: 'col-ya-1', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-tidak-1', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-executor-1', label: 'Pelaksana', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-controller-1', label: 'Kontrol', type: 'text', mode: 'read-only', required: true }
       ]
     },
     {
       id: 'cek-ulang-pra-sibuk',
-      name: 'Cek Ulang Pra-Sibuk',
+      name: 'B. Cek Ulang Sebelum Jam Ramai',
       description: 'Verifikasi ulang stok dan kesiapan alur penyajian sebelum jam sibuk.',
       questionCount: 9,
       isVisible: true,
       columns: [
-        { id: 'col-no-2', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-2', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-2', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-item-2', label: 'Item yang dicek', type: 'text', mode: 'input', required: true },
-        { id: 'col-ya-2', label: 'Ya', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-tidak-2', label: 'Tidak', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-time-2', label: 'Jam cek', type: 'time', mode: 'input', required: true }
+        { id: 'col-ya-2', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-tidak-2', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-time-2', label: 'Jam cek', type: 'time', mode: 'read-only', required: true }
       ]
     },
     {
       id: 'penerimaan-pesanan',
-      name: 'Penerimaan Pesanan',
+      name: 'C. Saat Pesanan Masuk dan Diproses',
       description: 'Pemrosesan pesanan dari struk hingga penyajian atau pengemasan.',
       questionCount: 8,
       isVisible: true,
       columns: [
-        { id: 'col-no-3', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-3', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-3', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-step-3', label: 'Langkah', type: 'text', mode: 'input', required: true },
-        { id: 'col-done-3', label: 'Selesai', type: 'boolean', mode: 'input', required: false }
+        { id: 'col-done-3', label: 'Selesai', type: 'boolean', mode: 'read-only', required: false }
       ]
     },
     {
       id: 'jam-sibuk',
-      name: 'Jam Sibuk',
+      name: 'D. Pesanan Banyak / Jam Ramai',
       description: 'Kontrol tambahan saat volume pesanan tinggi.',
       questionCount: 8,
       isVisible: true,
       columns: [
-        { id: 'col-no-4', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-4', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-4', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-item-4', label: 'Item', type: 'text', mode: 'input', required: true },
-        { id: 'col-ya-4', label: 'Ya', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-tidak-4', label: 'Tidak', type: 'boolean', mode: 'input', required: false }
+        { id: 'col-ya-4', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-tidak-4', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false }
       ]
     },
     {
       id: 'insiden-pesanan',
-      name: 'Insiden Pesanan',
+      name: 'E. Jika Terjadi Ketinggalan atau Item Kurang/Salah',
       description: 'Penanganan pesanan hilang, tidak lengkap, atau salah.',
       questionCount: 3,
       isVisible: true,
       columns: [
-        { id: 'col-no-5', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-5', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-5', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-action-5', label: 'Tindakan', type: 'text', mode: 'input', required: true },
-        { id: 'col-done-5', label: 'Selesai', type: 'boolean', mode: 'input', required: false }
+        { id: 'col-done-5', label: 'Selesai', type: 'boolean', mode: 'read-only', required: false }
       ]
     },
     {
       id: 'penutupan-shift',
-      name: 'Penutupan Shift',
+      name: 'F. Penutupan Shift',
       description: 'Rekap kontrol, komplain, dan pelaporan akhir shift.',
       questionCount: 5,
       isVisible: true,
       columns: [
-        { id: 'col-no-6', label: 'No', type: 'number', mode: 'input', required: true },
-        { id: 'col-service-6', label: 'Layanan', type: 'text', mode: 'input', required: true },
+        { id: 'col-service-6', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
         { id: 'col-item-6', label: 'Item', type: 'text', mode: 'input', required: true },
-        { id: 'col-ya-6', label: 'Ya', type: 'boolean', mode: 'input', required: false },
-        { id: 'col-tidak-6', label: 'Tidak', type: 'boolean', mode: 'input', required: false }
+        { id: 'col-ya-6', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
+        { id: 'col-tidak-6', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false }
       ]
     }
   ],
@@ -133,7 +127,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
     { id: 'q-31', categoryId: 'penerimaan-pesanan', name: 'Cek 2 (orang berbeda): isi diperiksa ulang dan disebutkan ke pelanggan/driver.', service: 'TA', requiresDoubleCheck: true },
     { id: 'q-32', categoryId: 'penerimaan-pesanan', name: 'Ganje dikemas di wadah terpisah/tidak menempel pada nasi agar tidak basah, lalu kemasan ditutup dan diberi stiker segel.', service: 'TA' },
     { id: 'q-33', categoryId: 'jam-sibuk', name: 'Nasi, ayam, ganje, dan sambal disiapkan sesuai total pesanan sebelum pengemasan dimulai.', service: 'TA' },
-    { id: 'q-34', categoryId: 'jam-sibuk', name: 'Ayam/ikan untuk pesanan banyak mulai digoreng/dibakar lebih awal dan dipantau agar tidak habis di tengah jam ramai.', service: 'Semua' },
+    { id: 'q-34', categoryId: 'jam-sibuk', name: 'Ayam/ ikan untuk pesanan banyak mulai digoreng/dibakar lebih awal dan dipantau agar tidak habis di tengah jam ramai.', service: 'Semua' },
     { id: 'q-35', categoryId: 'jam-sibuk', name: 'Ganje dimasak per batch sesuai jumlah pesanan yang antre, bukan sekaligus terlalu banyak.', service: 'Semua' },
     { id: 'q-36', categoryId: 'jam-sibuk', name: 'Pesanan disusun per nomor/nama pelanggan.', service: 'TA' },
     { id: 'q-37', categoryId: 'jam-sibuk', name: 'Satu pesanan selesai penuh sebelum pindah ke pesanan berikutnya.', service: 'TA' },
@@ -143,9 +137,9 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
     { id: 'q-41', categoryId: 'insiden-pesanan', name: 'Susulan (nasi/sambal/ayam/ganje) langsung diantar tanpa menunggu pelanggan bertanya.', service: 'DI' },
     { id: 'q-42', categoryId: 'insiden-pesanan', name: 'Pelanggan/driver dihubungi, lalu susulan atau kompensasi diberikan sesuai kebijakan.', service: 'TA' },
     { id: 'q-43', categoryId: 'insiden-pesanan', name: 'Kasus dicatat di laporan komplain.', service: 'Semua' },
-    { id: 'q-44', categoryId: 'penutupan-shift', name: 'Jumlah komplain shift ini: nasi, sambal, ayam, ganje kasus.', service: 'Semua' },
-    { id: 'q-45', categoryId: 'penutupan-shift', name: 'Sampel pesanan take away dicek Kapten (minimal sesuai target).', service: 'TA' },
-    { id: 'q-46', categoryId: 'penutupan-shift', name: 'Sampel pengantaran dine in dicek Kapten (minimal sesuai target).', service: 'DI' },
+    { id: 'q-44', categoryId: 'penutupan-shift', name: 'Jumlah komplain shift ini: nasi ..... , sambal ..... , ayam ..... , ganje ..... kasus.', service: 'Semua' },
+    { id: 'q-45', categoryId: 'penutupan-shift', name: 'Sampel pesanan take away dicek Kapten (minimal .... pesanan).', service: 'TA' },
+    { id: 'q-46', categoryId: 'penutupan-shift', name: 'Sampel pengantaran dine in dicek Kapten (minimal .... meja).', service: 'DI' },
     { id: 'q-47', categoryId: 'penutupan-shift', name: 'Sisa ayam dan sisa kangkung/ganje dicatat dan ditangani sesuai standar warung.', service: 'Semua' },
     { id: 'q-48', categoryId: 'penutupan-shift', name: 'Temuan dilaporkan ke Manajer Area/Admin Operasional.', service: 'Semua' }
   ]

@@ -14,6 +14,16 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
     )?.columns ?? []
   )
 
+  const serviceOptions = computed(() =>
+    Array.from(new Set(questionsVm.view.questions.map((question) => question.service)))
+      .filter(Boolean)
+      .sort((firstValue, secondValue) => firstValue.localeCompare(secondValue))
+  )
+
+  const defaultServiceValue = computed(() =>
+    serviceOptions.value.includes('Semua') ? 'Semua' : serviceOptions.value[0] ?? ''
+  )
+
   const error = computed(() => questionsVm.view.modal.questionFormError)
   const isEditing = computed(() => form.editingQuestionId !== null)
 
@@ -21,7 +31,11 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
     form.values = Object.fromEntries(
       fields.value.map((column) => [
         column.id,
-        column.type === 'boolean' ? false : ''
+        column.label.toLowerCase().includes('layanan')
+          ? defaultServiceValue.value
+          : column.type === 'boolean'
+            ? false
+            : ''
       ])
     )
   }
@@ -106,6 +120,7 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
   return {
     form,
     fields,
+    serviceOptions,
     error,
     isEditing,
     reset,

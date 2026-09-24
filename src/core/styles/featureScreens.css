@@ -540,6 +540,18 @@
   width: 14px;
 }
 
+.checklist-column-owner {
+  background: var(--sbm-tertiary);
+  border-radius: 999px;
+  color: var(--sbm-neutral);
+  flex: 0 0 auto;
+  font-size: 0.62rem;
+  font-weight: 800;
+  margin-left: auto;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
 .checklist-column-list {
   display: grid;
   gap: 8px;

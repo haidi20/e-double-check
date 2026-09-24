@@ -28,6 +28,7 @@ export interface ChecklistCategoryCardItem {
 }
 
 export interface ChecklistQuestionRow {
+  number: number
   id: string
   name: string
   service: string
@@ -100,7 +101,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     }
 
     const missingColumn = category.columns.find((column) => {
-      if (!column.required) {
+      if (!column.required || column.mode === 'read-only') {
         return false
       }
 

@@ -1,3 +1,6 @@
+- http://localhost:5173/checklist
+- http://localhost:5173/checklist/persiapan-shift
+
 # Analisis, Perencanaan, dan Implementasi
 ## Digitalisasi Checklist Anti Ketinggalan Nasi, Sambal, Ayam, dan Ganje
 
@@ -31,12 +34,12 @@
 
 | Bagian | Waktu eksekusi | Jumlah item | Kolom utama |
 |---|---|---:|---|
-| Kategori awal A: Persiapan shift | 30-60 menit sebelum buka | 15 | Layanan, item, ya/tidak, pelaksana, kontrol |
-| Kategori awal B: Cek ulang sebelum jam sibuk | Sebelum jam sibuk | 9 | Layanan, item, ya/tidak, jam cek |
-| Kategori awal C: Penerimaan dan pemrosesan pesanan | Selama pesanan aktif | 8 | Layanan, langkah, penyelesaian |
-| Kategori awal D: Volume pesanan tinggi / jam sibuk | Selama jam sibuk | 8 | Layanan, item, ya/tidak |
-| Kategori awal E: Pesanan hilang, tidak lengkap, atau salah | Sesuai kebutuhan | 3 plus tabel insiden | Layanan, tindakan, penyelesaian |
-| Kategori awal F: Penutupan shift | Akhir shift | 5 | Layanan, item, ya/tidak |
+| A. Prepare Awal Shift (30-60 menit sebelum buka) | 30-60 menit sebelum buka | 15 | Layanan, item, ya/tidak, pelaksana, kontrol |
+| B. Cek Ulang Sebelum Jam Ramai | Sebelum jam ramai | 9 | Layanan, item, ya/tidak, jam cek |
+| C. Saat Pesanan Masuk dan Diproses | Saat pesanan aktif | 8 | Layanan, langkah, penyelesaian |
+| D. Pesanan Banyak / Jam Ramai | Saat jam ramai | 8 | Layanan, item, ya/tidak |
+| E. Jika Terjadi Ketinggalan atau Item Kurang/Salah | Insidental | 3 | Layanan, tindakan, penyelesaian |
+| F. Penutupan Shift | Akhir shift | 5 | Layanan, item, ya/tidak |
 
 Nama A-F, waktu, dan jumlah item awal hanya menjelaskan PDF sumber. Mereka adalah data awal, bukan bagian aplikasi yang tetap atau konstanta sistem. Kategori harus sepenuhnya dinamis: pengguna yang berwenang dapat membuat, membaca, memperbarui, mengurutkan ulang, mengarsipkan, dan menghapusnya melalui layar CRUD kategori, dengan memperhatikan penjagaan referensi dan riwayat. Perilaku checklist harus menggunakan ID kategori dan konfigurasi, bukan label atau posisi A-F yang di-hard-code.
 
@@ -301,7 +304,11 @@ interface ShiftClosure {
 }
 ```
 
-Category columns are configured by users rather than fixed in the application. A column definition includes its label, data type, input mode (`input` or `read-only`), required flag, order, and any type-specific options. Typical seed columns based on the PDF include `No`, `Layanan`, `Item yang dicek`, `Ya`, `Tidak`, `Pelaksana`, `Kontrol`, and `Jam cek`; users can add, edit, reorder, archive, or delete columns subject to snapshot/history guards. `Layanan` is a separate user-managed master, seeded initially with `Semua`, `DI`, and `TA`; category columns and checklist items reference service records by ID, not hard-coded enum values. These Indonesian labels are shown to users and may remain Indonesian.
+Category columns are configured by users rather than fixed in the application. A column definition includes its label, data type, value owner (`input` untuk Admin atau `read-only` untuk Karyawan), required flag, order, and any type-specific options. `No` pada PDF tidak dijadikan kolom konfigurasi karena nomor hanya dibuat saat rendering laporan/checklist; kolom seed yang dapat dikonfigurasi meliputi `Layanan`, `Item yang dicek`, `Ya`, `Tidak`, `Pelaksana`, `Kontrol`, dan `Jam cek`. Users can add, edit, reorder, archive, or delete columns subject to snapshot/history guards. `Layanan` is a separate user-managed master, seeded initially with `Semua`, `DI`, and `TA`; category columns and checklist items reference service records by ID, not hard-coded enum values. These Indonesian labels are shown to users and may remain Indonesian.
+
+Kebijakan penentuan nilai kolom: pada form kolom, admin memilih **Nilai ditentukan oleh** dengan dua pilihan, yaitu **Admin** (`input`) atau **Karyawan** (`read-only`). Jika dipilih Admin, nilai kolom dapat diinput dan divalidasi sesuai tipe datanya pada form pertanyaan kategori seperti `/checklist/persiapan-shift`. Jika dipilih Karyawan, kontrol pada form pertanyaan kategori ditampilkan read-only dengan keterangan **di isi oleh karyawan**; nilai kolom tersebut tidak diubah melalui form konfigurasi/pertanyaan dan perilakunya tetap disimpan dalam snapshot kolom sesi.
+
+Kebijakan data awal PDF: semua kolom operasional ditentukan oleh **Karyawan**, kecuali kolom pertanyaan utama—`Item yang dicek`, `Langkah`, `Item`, dan `Tindakan`—yang tetap ditentukan oleh **Admin**. Artinya admin mengelola redaksi pertanyaan, sedangkan kolom operasional seperti `Layanan`, jawaban, status, waktu, pelaksana, dan kontrol menjadi bagian input/read-only milik karyawan sesuai konteks penggunaannya. Kolom `No` tidak disimpan sebagai kolom master karena nomor hanya dihasilkan pada laporan.
 
 Completion status is separate from answer values so each data type can be validated correctly. A `not-applicable` or `skipped` item requires a reason. Required Check 1, Check 2, and final-checker records are stored separately with actor identity and timestamps. Session snapshots retain category column definitions, service labels/IDs, question wording, and validation configuration used when the session began. Read-only columns are rendered as display values and cannot be edited through the session UI; input columns are validated by their configured data type.
 
@@ -650,14 +657,17 @@ GET /checklist-reports
 Data seed di `src/features/checklist/state/checklistQuestionsState.ts` sudah diperbaiki agar sesuai dengan PDF sumber:
 
 - **48 pertanyaan** dengan distribusi: A=15, B=9, C=8, D=8, E=3, F=5.
+- **Label kategori mengikuti PDF**: `A. Prepare Awal Shift (30-60 menit sebelum buka)`, `B. Cek Ulang Sebelum Jam Ramai`, `C. Saat Pesanan Masuk dan Diproses`, `D. Pesanan Banyak / Jam Ramai`, `E. Jika Terjadi Ketinggalan atau Item Kurang/Salah`, dan `F. Penutupan Shift`.
 - **Kolom per kategori mengikuti variasi PDF**, bukan kolom yang diseragamkan:
-  - A: No, Layanan, Item yang dicek, Ya, Tidak, Pelaksana, Kontrol
-  - B: No, Layanan, Item yang dicek, Ya, Tidak, Jam cek
-  - C: No, Layanan, Langkah, Selesai
-  - D: No, Layanan, Item, Ya, Tidak
-  - E: No, Layanan, Tindakan, Selesai
-  - F: No, Layanan, Item, Ya, Tidak
+  - A: Layanan, Item yang dicek, Ya, Tidak, Pelaksana, Kontrol
+  - B: Layanan, Item yang dicek, Ya, Tidak, Jam cek
+  - C: Layanan, Langkah, Selesai
+  - D: Layanan, Item, Ya, Tidak
+  - E: Layanan, Tindakan, Selesai
+  - F: Layanan, Item, Ya, Tidak
 - Kolom dinamis dapat dikelola (CRUD) oleh admin melalui modal kelola kolom pada setiap card kategori.
+- Kolom `No` tidak ikut disimpan pada konfigurasi kolom; nomor di-generate hanya pada tampilan laporan/checklist.
+- Kebijakan pemilik nilai pada seed PDF: semua kolom milik **Karyawan**, kecuali kolom pertanyaan utama (`Item yang dicek`, `Langkah`, `Item`, `Tindakan`) yang milik **Admin**.
 ### Lampiran: Perbandingan PDF Sumber vs Implementasi Sebelum Perbaikan
 
 **Ringkasan temuan:** data seed sebelumnya tidak sesuai dengan PDF sumber pada tiga hal berikut:

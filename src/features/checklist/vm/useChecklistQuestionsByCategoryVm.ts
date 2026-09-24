@@ -28,7 +28,8 @@ export const useChecklistQuestionsByCategoryVm = defineStore('checklistQuestions
 
     return questionsVm.view.questions
       .filter((question) => question.categoryId === categoryId.value)
-      .map((question) => ({
+      .map((question, index) => ({
+        number: index + 1,
         id: question.id,
         name: question.name,
         service: question.service,
