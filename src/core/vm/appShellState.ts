@@ -22,22 +22,10 @@ export const appShellState: AppShellUiState = {
       icon: 'M3 10 12 3l9 7v10H3V10Zm6 10v-6h6v6'
     },
     {
-      id: 'products',
-      label: 'Produk Anda',
-      routePath: '/products',
-      icon: 'M4 8h16v12H4zM7 8V6a5 5 0 0 1 10 0v2M8 13h8'
-    },
-    {
-      id: 'favorite',
-      label: 'Sukha',
-      routePath: '/roles',
-      icon: 'M12 21s-7-4.4-9-9.2C1.5 8.2 3.7 5 7 5c2 0 3.4 1.1 5 2.8C13.6 6.1 15 5 17 5c3.3 0 5.5 3.2 4 6.8C19 16.6 12 21 12 21Z'
-    },
-    {
-      id: 'loyalty',
-      label: 'Loyalty',
-      routePath: '/reports',
-      icon: 'M4 17a8 8 0 1 1 16 0M7 17a5 5 0 1 1 10 0M10 17a2 2 0 1 1 4 0'
+      id: 'history',
+      label: 'Riwayat',
+      routePath: '/history',
+      icon: 'M12 8v4l3 2M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0Z'
     }
   ],
   quickActionItems: [

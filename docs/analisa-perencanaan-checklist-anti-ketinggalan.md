@@ -123,6 +123,8 @@ Screen (Vue) -> ViewModel (Pinia) -> State
 
 Screens render state and forward user actions to view models. Every view model is a Pinia store, defined with `defineStore`, and each store has its own file. Each state object also has its own file; do not combine multiple states or view models in one file. View models own all business rules, validation, orchestration, and transformations. State files contain initial/in-memory state only; they must not contain business logic or perform persistence. View models access data through repositories, whose implementations can use a remote API or local storage. PDF content is seed data only and must not constrain future checklist configuration.
 
+Setiap pengerjaan pada file `.vue` wajib menggunakan skill **`$vue`** terlebih dahulu. Aturan ini berlaku untuk analisa, perubahan, refactor, dan review fitur Vue agar logika bisnis tetap berada di VM Pinia, state tetap terpisah, dan screen/modal tetap presentational.
+
 ---
 
 ## 2. Perencanaan

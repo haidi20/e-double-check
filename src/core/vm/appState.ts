@@ -25,7 +25,7 @@ export const appState: AppState = {
       section: 'Utama',
       routePath: '/dashboard',
       icon: 'M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z',
-      component: lazyView(() => import('@/features/dashboard/screen/DashboardRouteScreen.vue'))
+      component: lazyView(() => import('@/features/dashboard/screen/DashboardScreen.vue'))
     },
     {
       id: 'checklist',

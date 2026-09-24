@@ -5,6 +5,7 @@ import { appShellState } from '@/core/vm/appShellState'
 import { useAppVm } from '@/core/vm/useAppVm'
 import { useAuthVm } from '@/features/auth/vm/useAuthVm'
 import { useDashboardVm } from '@/features/dashboard/vm/useDashboardVm'
+import { useDashboardMobileVm } from '@/features/dashboard/vm/useDashboardMobileVm'
 import type { AuthRole } from '@/features/auth/type/authTypes'
 import type { ShellNavigationSection } from '@/core/type/appTypes'
 
@@ -14,6 +15,7 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   const appVm = useAppVm()
   const authVm = useAuthVm()
   const dashboardVm = useDashboardVm()
+  const dashboardMobileVm = useDashboardMobileVm()
   const view = reactive({ ...appShellState })
 
   const isLoginRoute = computed(() => route.path === '/login')
@@ -21,7 +23,9 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     view.compactSidebarRouteNames.includes(String(route.name))
   )
   const isMobileDashboardRoute = computed(
-    () => route.name === 'dashboard' && authVm.selectedRole === 'employee'
+    () =>
+      (route.name === 'dashboard' || route.name === 'history') &&
+      authVm.selectedRole === 'employee'
   )
 
   const desktopNavigationSections = computed<ShellNavigationSection[]>(() => [
@@ -37,6 +41,17 @@ export const useAppShellVm = defineStore('appShellVm', () => {
       }))
     }
   ])
+
+  const quickActionItems = computed(() =>
+    authVm.selectedRole === 'employee'
+      ? dashboardMobileVm.categories.map((category) => ({
+          id: category.id,
+          label: category.name,
+          routePath: category.routePath,
+          icon: category.icon
+        }))
+      : view.quickActionItems
+  )
 
   watch(
     () => route.query.role,
@@ -87,6 +102,7 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     isCompactSidebarRoute,
     isMobileDashboardRoute,
     desktopNavigationSections,
+    quickActionItems,
     isNavigationActive,
     closeMobileMenu,
     toggleMobileMenu,

@@ -22,7 +22,7 @@ const vm = useAppShellVm()
     ></button>
 
     <nav class="bottom-nav" aria-label="Navigasi utama">
-      <!-- <RouterLink
+      <RouterLink
         v-for="item in vm.view.bottomNavigationItems"
         :key="item.id"
         :to="item.routePath"
@@ -32,7 +32,7 @@ const vm = useAppShellVm()
           <path :d="item.icon" />
         </svg>
         <span>{{ item.label }}</span>
-      </RouterLink> -->
+      </RouterLink>
 
       <button
         type="button"
@@ -66,7 +66,7 @@ const vm = useAppShellVm()
       </header>
       <div class="quick-action-sheet__grid">
         <button
-          v-for="item in vm.view.quickActionItems"
+          v-for="item in vm.quickActionItems"
           :key="item.id"
           type="button"
           class="quick-action-item"

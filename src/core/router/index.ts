@@ -21,6 +21,11 @@ export const router = createRouter({
       name: 'checklist-category',
       component: () => import('@/features/checklist/screen/ChecklistQuestionsByCategoryScreen.vue')
     },
+    {
+      path: '/history',
+      name: 'history',
+      component: () => import('@/features/history/screen/HistoryScreen.vue')
+    },
     ...appState.navigationItems.map((item) => ({
       path: item.routePath,
       name: item.id,
