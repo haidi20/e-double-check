@@ -2,7 +2,6 @@ import type { AppShellUiState } from '@/core/type/appTypes'
 
 export const appShellState: AppShellUiState = {
   isProfileMenuOpen: false,
-  isQuickActionOpen: false,
   compactSidebarRouteNames: ['dashboard', 'checklist', 'orders', 'delivery-orders', 'kpi', 'reports', 'doc', 'products', 'customers', 'inventory', 'warehouses', 'outlets', 'services', 'vehicles', 'employees', 'users', 'roles'],
   compactSidebarIcons: {
     checklist: 'M6 3h12v18H6zM9 7h6M9 11h4M9 15h6',
@@ -28,42 +27,4 @@ export const appShellState: AppShellUiState = {
       icon: 'M12 8v4l3 2M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0Z'
     }
   ],
-  quickActionItems: [
-    {
-      id: 'reports',
-      label: 'Laporan',
-      routePath: '/reports',
-      icon: 'M4 20V10M10 20V4M16 20v-6M22 20H2'
-    },
-    {
-      id: 'outlets',
-      label: 'Warung',
-      routePath: '/outlets',
-      icon: 'M4 20V8l8-5 8 5v12H4ZM8 20v-6h8v6M8 10h2M14 10h2'
-    },
-    {
-      id: 'employees',
-      label: 'Pegawai',
-      routePath: '/employees',
-      icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0'
-    },
-    {
-      id: 'users',
-      label: 'Pengguna',
-      routePath: '/users',
-      icon: 'M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM5 21a7 7 0 0 1 14 0'
-    },
-    {
-      id: 'doc',
-      label: 'Dokumentasi',
-      routePath: '/doc',
-      icon: 'M6 3h9l3 3v15H6V3Zm9 0v4h4M9 11h6M9 15h6M9 19h4'
-    },
-    {
-      id: 'roles',
-      label: 'Pengaturan',
-      routePath: '/roles',
-      icon: 'M12 3 20 7v5c0 5-3.4 8.1-8 10-4.6-1.9-8-5-8-10V7l8-4Zm-3 9 2 2 4-5'
-    }
-  ]
 }

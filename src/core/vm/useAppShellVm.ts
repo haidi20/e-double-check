@@ -5,7 +5,6 @@ import { appShellState } from '@/core/vm/appShellState'
 import { useAppVm } from '@/core/vm/useAppVm'
 import { useAuthVm } from '@/features/auth/vm/useAuthVm'
 import { useDashboardVm } from '@/features/dashboard/vm/useDashboardVm'
-import { useDashboardMobileVm } from '@/features/dashboard/vm/useDashboardMobileVm'
 import type { AuthRole } from '@/features/auth/type/authTypes'
 import type { ShellNavigationSection } from '@/core/type/appTypes'
 
@@ -15,7 +14,6 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   const appVm = useAppVm()
   const authVm = useAuthVm()
   const dashboardVm = useDashboardVm()
-  const dashboardMobileVm = useDashboardMobileVm()
   const view = reactive({ ...appShellState })
 
   const isLoginRoute = computed(() => route.path === '/login')
@@ -24,9 +22,10 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   )
   const isMobileDashboardRoute = computed(
     () =>
-      (route.name === 'dashboard' || route.name === 'history') &&
+      (route.name === 'dashboard' || route.name === 'history' || route.name === 'question') &&
       authVm.selectedRole === 'employee'
   )
+  const isQuestionRoute = computed(() => route.name === 'question')
 
   const desktopNavigationSections = computed<ShellNavigationSection[]>(() => [
     {
@@ -41,17 +40,6 @@ export const useAppShellVm = defineStore('appShellVm', () => {
       }))
     }
   ])
-
-  const quickActionItems = computed(() =>
-    authVm.selectedRole === 'employee'
-      ? dashboardMobileVm.categories.map((category) => ({
-          id: category.id,
-          label: category.name,
-          routePath: category.routePath,
-          icon: category.icon
-        }))
-      : view.quickActionItems
-  )
 
   watch(
     () => route.query.role,
@@ -78,22 +66,16 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     view.isProfileMenuOpen = false
   }
 
-  const toggleQuickAction = () => {
-    view.isQuickActionOpen = !view.isQuickActionOpen
-  }
-
-  const closeQuickAction = () => {
-    view.isQuickActionOpen = false
-  }
-
   const logout = async () => {
     closeProfileMenu()
     await authVm.logout()
   }
 
-  const openQuickAction = async (routePath: string) => {
-    closeQuickAction()
-    await router.push(routePath)
+  const openQuestionPage = async () => {
+    await router.push({
+      path: '/question',
+      query: route.query.role ? { role: route.query.role } : {}
+    })
   }
 
   return {
@@ -101,17 +83,15 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     isLoginRoute,
     isCompactSidebarRoute,
     isMobileDashboardRoute,
+    isQuestionRoute,
     desktopNavigationSections,
-    quickActionItems,
     isNavigationActive,
     closeMobileMenu,
     toggleMobileMenu,
     toggleProfileMenu,
     closeProfileMenu,
-    toggleQuickAction,
-    closeQuickAction,
     logout,
-    openQuickAction,
+    openQuestionPage,
     shell: computed(() => appVm.shell),
     activeScreen: computed(() => appVm.activeScreen),
     isMobileMenuOpen: computed(() => appVm.isMobileMenuOpen)

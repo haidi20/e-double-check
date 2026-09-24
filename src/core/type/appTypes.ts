@@ -46,12 +46,10 @@ export interface ShellNavigationSection {
 
 export interface AppShellUiState {
   isProfileMenuOpen: boolean
-  isQuickActionOpen: boolean
   compactSidebarRouteNames: string[]
   compactSidebarIcons: Record<string, string>
   compactSidebarDefaultIcon: string
   bottomNavigationItems: ShellNavItem[]
-  quickActionItems: ShellNavItem[]
 }
 
 export interface AppState {

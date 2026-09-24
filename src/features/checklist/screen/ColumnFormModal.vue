@@ -109,6 +109,13 @@ const modalVm = useColumnManagerModalVm()
               </select>
             </label>
           </div>
+          <label class="feature-form-modal__field">
+            Lebar grid
+            <select v-model.number="modalVm.formVm.form.gridSpan">
+              <option :value="12">Full Grid</option>
+              <option :value="6">Setengah (6 Grid)</option>
+            </select>
+          </label>
           <label class="checklist-column-form__check">
             <input v-model="modalVm.formVm.form.required" type="checkbox" />
             Wajib diisi

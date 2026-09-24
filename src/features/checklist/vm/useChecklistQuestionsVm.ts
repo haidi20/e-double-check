@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { checklistQuestionsState } from '@/features/checklist/state/checklistQuestionsState'
-import type { ChecklistCategory, ChecklistColumn, ChecklistColumnMode, ChecklistQuestion, ChecklistQuestionValue } from '@/features/checklist/type/checklistTypes'
+import type { ChecklistCategory, ChecklistColumn, ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistQuestion, ChecklistQuestionValue } from '@/features/checklist/type/checklistTypes'
 
 const defaultCategoryIcon = 'M4 6h16v4H4zM4 12h16v4H4zM4 18h16v2H4z'
 
@@ -274,7 +274,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     view.columnModal.columnFormError = ''
   }
 
-  const addColumn = (input: { label: string; type: ChecklistColumn['type']; mode: ChecklistColumnMode; required: boolean }) => {
+  const addColumn = (input: { label: string; type: ChecklistColumn['type']; mode: ChecklistColumnMode; required: boolean; gridSpan: ChecklistColumnGridSpan }) => {
     if (!view.columnModal.columnModalCategoryId) {
       return false
     }
@@ -315,6 +315,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         existing.type = input.type
         existing.mode = input.mode
         existing.required = input.required
+        existing.gridSpan = input.gridSpan
       }
     } else {
       const nextNumber = category.columns.reduce((max, column) => {
@@ -328,7 +329,8 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         label: trimmedLabel,
         type: input.type,
         mode: input.mode,
-        required: input.required
+        required: input.required,
+        gridSpan: input.gridSpan
       })
     }
 

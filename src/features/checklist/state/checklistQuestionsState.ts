@@ -20,12 +20,12 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 15,
       isVisible: true,
       columns: [
-        { id: 'col-service-1', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-1', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-item-1', label: 'Item yang dicek', type: 'text', mode: 'input', required: true },
         { id: 'col-ya-1', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
         { id: 'col-tidak-1', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false },
-        { id: 'col-executor-1', label: 'Pelaksana', type: 'text', mode: 'read-only', required: true },
-        { id: 'col-controller-1', label: 'Kontrol', type: 'text', mode: 'read-only', required: true }
+        { id: 'col-executor-1', label: 'Pelaksana', type: 'text', mode: 'input', required: true },
+        { id: 'col-controller-1', label: 'Kontrol', type: 'text', mode: 'input', required: true }
       ]
     },
     {
@@ -35,7 +35,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 9,
       isVisible: true,
       columns: [
-        { id: 'col-service-2', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-2', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-item-2', label: 'Item yang dicek', type: 'text', mode: 'input', required: true },
         { id: 'col-ya-2', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
         { id: 'col-tidak-2', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false },
@@ -49,7 +49,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 8,
       isVisible: true,
       columns: [
-        { id: 'col-service-3', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-3', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-step-3', label: 'Langkah', type: 'text', mode: 'input', required: true },
         { id: 'col-done-3', label: 'Selesai', type: 'boolean', mode: 'read-only', required: false }
       ]
@@ -61,7 +61,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 8,
       isVisible: true,
       columns: [
-        { id: 'col-service-4', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-4', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-item-4', label: 'Item', type: 'text', mode: 'input', required: true },
         { id: 'col-ya-4', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
         { id: 'col-tidak-4', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false }
@@ -74,7 +74,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 3,
       isVisible: true,
       columns: [
-        { id: 'col-service-5', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-5', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-action-5', label: 'Tindakan', type: 'text', mode: 'input', required: true },
         { id: 'col-done-5', label: 'Selesai', type: 'boolean', mode: 'read-only', required: false }
       ]
@@ -86,7 +86,7 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
       questionCount: 5,
       isVisible: true,
       columns: [
-        { id: 'col-service-6', label: 'Layanan', type: 'text', mode: 'read-only', required: true },
+        { id: 'col-service-6', label: 'Layanan', type: 'text', mode: 'input', required: true },
         { id: 'col-item-6', label: 'Item', type: 'text', mode: 'input', required: true },
         { id: 'col-ya-6', label: 'Ya', type: 'boolean', mode: 'read-only', required: false },
         { id: 'col-tidak-6', label: 'Tidak', type: 'boolean', mode: 'read-only', required: false }

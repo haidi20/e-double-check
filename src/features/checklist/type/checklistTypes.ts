@@ -1,5 +1,6 @@
 export type ChecklistColumnType = 'text' | 'number' | 'boolean' | 'time'
 export type ChecklistColumnMode = 'input' | 'read-only'
+export type ChecklistColumnGridSpan = 6 | 12
 export type ChecklistQuestionValue = string | number | boolean
 
 export interface ChecklistColumn {
@@ -8,6 +9,7 @@ export interface ChecklistColumn {
   type: ChecklistColumnType
   mode: ChecklistColumnMode
   required: boolean
+  gridSpan?: ChecklistColumnGridSpan
 }
 
 export interface ChecklistCategory {

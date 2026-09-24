@@ -14,11 +14,7 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
     )?.columns ?? []
   )
 
-  const serviceOptions = computed(() =>
-    Array.from(new Set(questionsVm.view.questions.map((question) => question.service)))
-      .filter(Boolean)
-      .sort((firstValue, secondValue) => firstValue.localeCompare(secondValue))
-  )
+  const serviceOptions = computed(() => ['Semua', 'DI', 'TA'])
 
   const defaultServiceValue = computed(() =>
     serviceOptions.value.includes('Semua') ? 'Semua' : serviceOptions.value[0] ?? ''

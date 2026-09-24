@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { columnFormState } from '@/features/checklist/state/columnFormState'
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
-import type { ChecklistColumn, ChecklistColumnMode, ChecklistColumnType } from '@/features/checklist/type/checklistTypes'
+import type { ChecklistColumn, ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistColumnType } from '@/features/checklist/type/checklistTypes'
 
 export const useColumnFormVm = defineStore('columnFormVm', () => {
   const form = reactive({ ...columnFormState })
@@ -35,6 +35,21 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
     'read-only': 'Karyawan'
   }
 
+  const defaultGridSpan = (column: ChecklistColumn | null): ChecklistColumnGridSpan => {
+    const isQuestionColumn = column && ['item yang dicek', 'langkah', 'item', 'tindakan']
+      .some((keyword) => column.label.toLowerCase().includes(keyword))
+
+    if (column?.gridSpan) {
+      return column.gridSpan
+    }
+
+    if (isQuestionColumn || column?.label === 'Layanan') {
+      return 12
+    }
+
+    return 6
+  }
+
   const formatColumnType = (column: ChecklistColumn) =>
     [columnTypeLabels[column.type], columnModeLabels[column.mode], column.required ? 'Wajib' : '']
       .filter(Boolean)
@@ -45,6 +60,7 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
     form.type = editingColumn.value?.type ?? columnFormState.type
     form.mode = editingColumn.value?.mode ?? columnFormState.mode
     form.required = editingColumn.value?.required ?? columnFormState.required
+    form.gridSpan = editingColumn.value?.gridSpan ?? defaultGridSpan(editingColumn.value)
     form.error = columnFormState.error
   }
 
@@ -63,7 +79,8 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
       label: form.label,
       type: form.type,
       mode: form.mode,
-      required: form.required
+      required: form.required,
+      gridSpan: form.gridSpan
     })
 
     if (isSuccess) {

@@ -28,6 +28,19 @@ export const useCategoryQuestionsModalVm = defineStore('categoryQuestionsModalVm
       column.label.trim().toLowerCase().includes(keyword)
     )
 
+  const getFieldLayoutClass = (column: ChecklistColumn) => {
+    const isFullWidth =
+      column.gridSpan === 12 ||
+      ((!column.gridSpan && isServiceColumn(column)) ||
+        (!column.gridSpan && isQuestionColumn(column)))
+
+    if (isFullWidth) {
+      return 'category-questions-modal__field--full'
+    }
+
+    return 'category-questions-modal__field--half'
+  }
+
   const getQuestionValue = (columnId: string) =>
     String(questionFormVm.form.values[columnId] ?? '')
 
@@ -77,6 +90,7 @@ export const useCategoryQuestionsModalVm = defineStore('categoryQuestionsModalVm
     serviceOptions,
     isServiceColumn,
     isQuestionColumn,
+    getFieldLayoutClass,
     getQuestionValue,
     updateQuestionValue,
     getServiceValue,

@@ -27,14 +27,15 @@ const vm = useCategoryQuestionsModalVm()
               v-for="column in vm.fields"
               :key="column.id"
               class="feature-form-modal__field category-questions-modal__field"
+              :class="vm.getFieldLayoutClass(column)"
             >
               <span class="category-questions-modal__label">
                 {{ column.label }}
                 <small
-                  v-if="column.mode === 'read-only'"
+                  v-if="column.mode === 'input'"
                   class="category-questions-modal__owner-note"
                 >
-                  di isi oleh karyawan
+                  di isi oleh admin
                 </small>
               </span>
               <SearchableSelect

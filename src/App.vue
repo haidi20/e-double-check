@@ -10,18 +10,12 @@ const vm = useAppShellVm()
 
   <div v-else-if="vm.isMobileDashboardRoute" class="app-shell">
     <div class="app-container">
-      <RouterView />
+      <Transition name="slide-up-page" mode="out-in">
+        <RouterView />
+      </Transition>
     </div>
 
-    <button
-      v-if="vm.view.isQuickActionOpen"
-      type="button"
-      class="quick-action-backdrop"
-      aria-label="Tutup menu aksi"
-      @click="vm.closeQuickAction"
-    ></button>
-
-    <nav class="bottom-nav" aria-label="Navigasi utama">
+    <nav v-if="!vm.isQuestionRoute" class="bottom-nav" aria-label="Navigasi utama">
       <RouterLink
         v-for="item in vm.view.bottomNavigationItems"
         :key="item.id"
@@ -37,9 +31,8 @@ const vm = useAppShellVm()
       <button
         type="button"
         class="bottom-nav__plus"
-        :aria-expanded="vm.view.isQuickActionOpen"
-        aria-label="Buka menu aksi"
-        @click="vm.toggleQuickAction"
+        aria-label="Buka halaman pertanyaan"
+        @click="vm.openQuestionPage"
       >
         <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
@@ -47,40 +40,6 @@ const vm = useAppShellVm()
       </button>
     </nav>
 
-    <section
-      v-if="vm.view.isQuickActionOpen"
-      class="quick-action-sheet"
-      aria-label="Menu aksi cepat"
-    >
-      <div class="quick-action-sheet__handle"></div>
-      <header class="quick-action-sheet__header">
-        <div>
-          <h2>Menu Utama</h2>
-          <p>Pilih aksi yang ingin kamu buka</p>
-        </div>
-        <button type="button" aria-label="Tutup menu" @click="vm.closeQuickAction">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
-        </button>
-      </header>
-      <div class="quick-action-sheet__grid">
-        <button
-          v-for="item in vm.quickActionItems"
-          :key="item.id"
-          type="button"
-          class="quick-action-item"
-          @click="vm.openQuickAction(item.routePath)"
-        >
-          <span class="quick-action-item__icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path :d="item.icon" />
-            </svg>
-          </span>
-          <span>{{ item.label }}</span>
-        </button>
-      </div>
-    </section>
   </div>
 
   <div v-else class="app-layout min-vh-100">

@@ -670,6 +670,26 @@ Data seed di `src/features/checklist/state/checklistQuestionsState.ts` sudah dip
 - Kolom dinamis dapat dikelola (CRUD) oleh admin melalui modal kelola kolom pada setiap card kategori.
 - Kolom `No` tidak ikut disimpan pada konfigurasi kolom; nomor di-generate hanya pada tampilan laporan/checklist.
 - Kebijakan pemilik nilai pada seed PDF: semua kolom milik **Karyawan**, kecuali kolom pertanyaan utama (`Item yang dicek`, `Langkah`, `Item`, `Tindakan`) yang milik **Admin**.
+
+### Analisis dan Implementasi Grid Form Kolom Kategori
+
+**Masalah sebelumnya:** form pertanyaan kategori hanya memakai satu pola lebar kolom, sehingga kolom panjang seperti layanan dan pertanyaan terpecah, sementara kontrol pendek menjadi terlalu lebar.
+
+**Keputusan layout:** form memakai grid dua kolom sehingga satu baris maksimal memuat dua input. Setiap kolom kategori menyimpan `gridSpan` dengan hanya dua pilihan:
+
+| Nilai `gridSpan` | Label admin | Arti tampilan |
+|---:|---|---|
+| `12` | Full Grid | Satu kolom memenuhi lebar form |
+| `6` | Setengah (6 Grid) | Dua kolom tampil berdampingan |
+
+**Nilai default:** kolom `Layanan` dan kolom pertanyaan utama memakai full grid; kolom lainnya memakai setengah grid. Dengan default ini, contoh PDF sumber langsung tampil sesuai kebutuhan: `Layanan` full, `Ya`/`Tidak` berdampingan, dan `Jam cek` setengah lebar.
+
+**Dampak implementasi:**
+
+- Admin dapat memilih lebar grid melalui modal **Kelola Kolom > Form Kolom**.
+- Grid memakai `repeat(2, minmax(0, 1fr))`, sehingga tidak mungkin ada lebih dari dua input dalam satu baris.
+- Full grid memakai `grid-column: 1 / -1`; setengah grid memakai satu kolom grid.
+- Pada viewport di bawah `768px`, semua kolom dipaksa full agar form tetap nyaman diisi di ponsel.
 ### Lampiran: Perbandingan PDF Sumber vs Implementasi Sebelum Perbaikan
 
 **Ringkasan temuan:** data seed sebelumnya tidak sesuai dengan PDF sumber pada tiga hal berikut:

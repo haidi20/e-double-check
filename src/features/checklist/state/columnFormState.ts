@@ -1,10 +1,11 @@
-import type { ChecklistColumnMode, ChecklistColumnType } from '@/features/checklist/type/checklistTypes'
+import type { ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistColumnType } from '@/features/checklist/type/checklistTypes'
 
 export interface ColumnFormState {
   label: string
   type: ChecklistColumnType
   mode: ChecklistColumnMode
   required: boolean
+  gridSpan: ChecklistColumnGridSpan
   error: string
 }
 
@@ -13,5 +14,6 @@ export const columnFormState: ColumnFormState = {
   type: 'text',
   mode: 'read-only',
   required: false,
+  gridSpan: 6,
   error: ''
 }

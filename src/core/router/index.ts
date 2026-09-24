@@ -26,6 +26,11 @@ export const router = createRouter({
       name: 'history',
       component: () => import('@/features/history/screen/HistoryScreen.vue')
     },
+    {
+      path: '/question',
+      name: 'question',
+      component: () => import('@/features/question/screen/QuestionScreen.vue')
+    },
     ...appState.navigationItems.map((item) => ({
       path: item.routePath,
       name: item.id,
