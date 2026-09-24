@@ -16,6 +16,11 @@ export const router = createRouter({
       path: '/',
       redirect: defaultNavigationItem.routePath
     },
+    {
+      path: '/checklist/:categoryId',
+      name: 'checklist-category',
+      component: () => import('@/features/checklist/screen/ChecklistQuestionsByCategoryScreen.vue')
+    },
     ...appState.navigationItems.map((item) => ({
       path: item.routePath,
       name: item.id,

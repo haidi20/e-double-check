@@ -1,81 +1,94 @@
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
+import ColumnFormModal from '@/features/checklist/screen/ColumnFormModal.vue'
+import { useColumnManagerModalVm } from '@/features/checklist/vm/useColumnManagerModalVm'
 
 const vm = useChecklistQuestionsVm()
-
-onUnmounted(() => {
-  vm.clearSelectedCategory()
-})
+const columnManagerModalVm = useColumnManagerModalVm()
 </script>
 
 <template>
   <main class="feature-screen container-fluid px-3 px-md-4 py-3 py-md-4">
-    <section class="page-heading">
-      <div>
-        <p class="eyebrow">Checklist</p>
-        <h2>{{ vm.selectedCategory ? vm.selectedCategory.name : 'Daftar Pertanyaan' }}</h2>
-        <p>
-          {{
-            vm.selectedCategory
-              ? vm.selectedCategory.description
-              : 'Pilih kategori untuk melihat daftar pertanyaan checklist.'
-          }}
-        </p>
-      </div>
-      <button
-        v-if="vm.selectedCategory"
-        type="button"
-        class="ghost-button"
-        @click="vm.clearSelectedCategory"
-      >
-        Kembali
-      </button>
-    </section>
-
-    <section v-if="!vm.selectedCategory" class="master-grid">
-      <button
-        v-for="category in vm.view.categories"
+    <section class="checklist-grid">
+      <article
+        v-for="category in vm.categoryCards"
         :key="category.id"
-        type="button"
-        class="panel checklist-category-card"
-        @click="vm.selectCategory(category.id)"
+        class="checklist-category-card"
+        :class="{ 'is-hidden': !category.isVisible }"
+        @click="vm.openCategory(category.id)"
       >
-        <p class="eyebrow">{{ category.questionCount }} pertanyaan</p>
-        <strong>{{ category.name }}</strong>
-        <p>{{ category.description }}</p>
-      </button>
-    </section>
+        <header class="checklist-category-card__header">
+          <span class="checklist-category-card__leading">
+            <button
+              type="button"
+              class="checklist-category-card__toggle"
+              :aria-pressed="category.isVisible"
+              :title="category.isVisible ? 'Sembunyikan kategori' : 'Tampilkan kategori'"
+              @click.stop="vm.toggleCategoryVisibility(category.id)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <template v-if="category.isVisible">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </template>
+                <template v-else>
+                  <path d="M3 3l18 18M10.6 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.4 3.2M6.6 6.6A17.2 17.2 0 0 0 2 12s3.5 7 10 7a10.4 10.4 0 0 0 5.4-1.4" />
+                  <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+                </template>
+              </svg>
+            </button>
+            <span class="checklist-category-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path :d="category.icon" />
+              </svg>
+            </span>
+          </span>
+          <button
+            type="button"
+              class="checklist-category-card__add"
+            aria-label="Kelola kolom"
+            title="Kelola kolom kategori"
+            @click.stop="columnManagerModalVm.open(category.id)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </header>
 
-    <section v-else class="panel">
-      <div class="panel__heading">
-        <div>
-          <p class="eyebrow">Detail kategori</p>
-          <h3>{{ vm.selectedCategory.name }}</h3>
+        <div class="checklist-category-card__body">
+          <strong>{{ category.name }}</strong>
+          <p>{{ category.description }}</p>
+          <ul class="checklist-category-card__columns">
+            <li
+              v-for="column in category.displayColumns"
+              :key="column.id"
+              class="checklist-column-item"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+              </svg>
+              {{ column.label }}
+            </li>
+          </ul>
         </div>
-        <span class="status-pill">{{ vm.selectedCategoryQuestions.length }} pertanyaan</span>
-      </div>
 
-      <div class="employee-list">
-        <article
-          v-for="question in vm.selectedCategoryQuestions"
-          :key="question.id"
-          class="employee-row"
-        >
-          <span>{{ question.service.slice(0, 2).toUpperCase() }}</span>
-          <div>
-            <strong>{{ question.name }}</strong>
-            <small>
-              {{ question.executor ? `Pelaksana: ${question.executor}` : 'Pelaksana belum ditentukan' }}
-              {{ question.controller ? ` - Kontrol: ${question.controller}` : '' }}
-            </small>
-          </div>
-          <b>{{ question.service }}</b>
-          <mark v-if="question.requiresDoubleCheck">Cek ganda</mark>
-          <mark v-else-if="question.requiresFinalChecker">Pemeriksa akhir</mark>
-          <mark v-else-if="question.requiresCheckTime">Jam cek</mark>
-        </article>
-      </div>
+        <footer class="checklist-category-card__footer">
+          <span class="checklist-category-card__badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 11l3 3L22 4" />
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+            </svg>
+            {{ category.questionCount }} pertanyaan
+          </span>
+          <span class="checklist-category-card__status" :class="{ 'is-off': !category.isVisible }">
+            {{ category.isVisible ? 'Tampil' : 'Disembunyikan' }}
+          </span>
+        </footer>
+      </article>
     </section>
+
+    <ColumnFormModal />
   </main>
 </template>

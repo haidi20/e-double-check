@@ -33,7 +33,7 @@ const authVm = useAuthVm()
           </button>
         </div>
       </header>
-      <section class="dashboard-card favorite-card" aria-labelledby="favorite-title">
+      <!-- <section class="dashboard-card favorite-card" aria-labelledby="favorite-title">
         <header class="dashboard-card__heading">
           <h2 id="favorite-title">Menu checklist</h2>
           <RouterLink to="/roles" class="dashboard-text-button">Atur <span class="sliders-icon">=</span></RouterLink>
@@ -49,8 +49,8 @@ const authVm = useAuthVm()
           </RouterLink>
         </div>
 
-        <!-- <div class="dashboard-promo"><span>QRIS</span><strong>{{ vm.view.promoLabel }}</strong></div> -->
-      </section>
+        <div class="dashboard-promo"><span>QRIS</span><strong>{{ vm.view.promoLabel }}</strong></div>
+      </section> -->
     </div>
   </main>
 </template>

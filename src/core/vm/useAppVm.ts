@@ -32,6 +32,7 @@ export const useAppVm = defineStore('appVm', () => {
 
     return (
       navigationItems.find((item) => item.id === routeName || item.routePath === route.path) ??
+      navigationItems.find((item) => route.path.startsWith(item.routePath)) ??
       navigationItems.find((item) => item.id === appState.activeScreenId) ??
       navigationItems[0]
     )

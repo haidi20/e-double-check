@@ -10,7 +10,7 @@
 - Menu utama menjadi **Daftar Pertanyaan** pada `/checklist`.
 - Halaman daftar pertanyaan menampilkan kategori checklist.
 - Klik **detail kategori** untuk membuka daftar pertanyaan di dalam kategori tersebut.
-- Implementasi awal menggunakan data seed sederhana sebagai contoh alur navigasi.
+- Data seed mengikuti PDF sumber: 48 item pertanyaan (A=15, B=9, C=8, D=8, E=3, F=5) dan kolom per kategori sesuai tabel PDF (bukan kolom yang diseragamkan).
 
 ---
 
@@ -644,6 +644,50 @@ GET /checklist-reports
 - [ ] Pengguna pegawai hanya melihat `/checklist` di sidebar setelah login.
 - [ ] View model menolak mutasi data master dari peran non-admin.
 - [ ] `npm run typecheck` completes without errors.
+
+### Status Implementasi Data Seed
+
+Data seed di `src/features/checklist/state/checklistQuestionsState.ts` sudah diperbaiki agar sesuai dengan PDF sumber:
+
+- **48 pertanyaan** dengan distribusi: A=15, B=9, C=8, D=8, E=3, F=5.
+- **Kolom per kategori mengikuti variasi PDF**, bukan kolom yang diseragamkan:
+  - A: No, Layanan, Item yang dicek, Ya, Tidak, Pelaksana, Kontrol
+  - B: No, Layanan, Item yang dicek, Ya, Tidak, Jam cek
+  - C: No, Layanan, Langkah, Selesai
+  - D: No, Layanan, Item, Ya, Tidak
+  - E: No, Layanan, Tindakan, Selesai
+  - F: No, Layanan, Item, Ya, Tidak
+- Kolom dinamis dapat dikelola (CRUD) oleh admin melalui modal kelola kolom pada setiap card kategori.
+### Lampiran: Perbandingan PDF Sumber vs Implementasi Sebelum Perbaikan
+
+**Ringkasan temuan:** data seed sebelumnya tidak sesuai dengan PDF sumber pada tiga hal berikut:
+
+**1. Jumlah pertanyaan per kategori**
+
+| Kategori | PDF Sumber | Implementasi (seed lama) |
+|---|---:|---:|
+| A. Persiapan shift | 15 | 4 |
+| B. Cek ulang sebelum jam ramai | 9 | 4 |
+| C. Saat pesanan masuk/diproses | 8 | 4 |
+| D. Pesanan banyak / jam ramai | 8 | 4 |
+| E. Ketinggalan / item kurang-salah | 3 | 4 |
+| F. Penutupan shift | 5 | 4 |
+| **Total** | **48** | **24** |
+
+**2. Kolom per kategori tidak sesuai PDF**
+
+Seed lama menyeragamkan semua kategori dengan kolom yang sama (No, Layanan, Item yang dicek, Ya, Tidak, Pelaksana, Kontrol), padahal PDF memiliki variasi kolom per kategori:
+
+- A: No, Layanan, Item yang dicek, Ya, Tidak, Pelaksana, Kontrol (cocok)
+- B: No, Layanan, Item yang dicek, Ya, Tidak, Jam cek (Pelaksana/Kontrol salah)
+- C: No, Layanan, Langkah, Selesai (kolom salah)
+- D: No, Layanan, Item, Ya, Tidak (Pelaksana/Kontrol tidak ada di PDF)
+- E: No, Layanan, Tindakan, Selesai (kolom salah)
+- F: No, Layanan, Item, Ya, Tidak (kolom salah)
+
+**3. Nama kategori sudah cocok dengan PDF** (hanya beda label minor).
+
+Semua ketidaksesuaian di atas telah diperbaiki pada seed saat ini.
 
 ---
 
