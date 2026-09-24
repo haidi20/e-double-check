@@ -4,7 +4,7 @@ import type { DashboardState } from '@/features/dashboard/type/dashboardTypes'
 export const dashboardState: DashboardState = {
   title: "Halaman Utama",
   subtitle: "Ringkasan Operasional",
-  description: "Modul untuk menampilkan kondisi utama aplikasi E-Distribusi SBM.",
+  description: "Modul untuk menampilkan kondisi utama aplikasi Checklist Anti-Ketinggalan.",
   usage: "Dipakai sebagai halaman awal agar pengguna cepat melihat pesanan, stok, pengiriman, dan pembayaran.",
   status: "Status: siap dikembangkan.",
   actions: [
@@ -116,7 +116,7 @@ export const dashboardState: DashboardState = {
   view: {
     title: "Halaman Utama",
     subtitle: "Ringkasan Operasional",
-    description: "Modul untuk menampilkan kondisi utama aplikasi E-Distribusi SBM.",
+    description: "Modul untuk menampilkan kondisi utama aplikasi Checklist Anti-Ketinggalan.",
     usage: "Dipakai sebagai halaman awal agar pengguna cepat melihat pesanan, stok, pengiriman, dan pembayaran.",
     status: "Status: siap dikembangkan.",
     actions: [

@@ -8,9 +8,9 @@ const lazyView = (loader: () => Promise<{ default: RouteComponent }>): Navigatio
 export const appState: AppState = {
   activeScreenId: 'dashboard',
   shell: {
-    brandInitials: 'SB',
-    brandTitle: 'SI Distribusi',
-    brandSubtitle: 'Operasional Logistik',
+    brandInitials: 'CA',
+    brandTitle: 'Checklist Anti-Ketinggalan',
+    brandSubtitle: 'Operasional Harian',
     topbarLabel: 'Pusat Operasional',
     notificationLabel: 'Notifikasi',
     notificationIcon: 'M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4',
