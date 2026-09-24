@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
-import { computed, reactive } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
 import { useDashboardMobileVm } from '@/features/dashboard/vm/useDashboardMobileVm'
 import type { ChecklistColumn, ChecklistQuestionValue } from '@/features/checklist/type/checklistTypes'
 import type { ChecklistCategoryCardItem, ChecklistQuestionRow } from '@/features/checklist/vm/useChecklistQuestionsVm'
 import { questionScreenState } from '@/features/question/state/questionScreenState'
+
+type ScrollContainer = HTMLElement | Window
 
 export interface QuestionGroup {
   category: ChecklistCategoryCardItem
@@ -18,6 +20,89 @@ export const useQuestionVm = defineStore('questionVm', () => {
   const router = useRouter()
   const checklistVm = useChecklistQuestionsVm()
   const dashboardVm = useDashboardMobileVm()
+  let activeHelperHighlightTimeout: number | undefined
+  let pageScrollContainer: ScrollContainer | null = null
+
+  const getScrollContainer = (element: HTMLElement): ScrollContainer => {
+    let parent = element.parentElement
+
+    while (parent) {
+      const styles = window.getComputedStyle(parent)
+      const canScroll = /(auto|scroll|overlay)/.test(styles.overflowY)
+
+      if (canScroll && parent.scrollHeight > parent.clientHeight) return parent
+      parent = parent.parentElement
+    }
+
+    return window
+  }
+
+  const getPageScrollContainer = (): ScrollContainer => {
+    const page = document.querySelector<HTMLElement>('.question-page')
+    return page ? getScrollContainer(page) : window
+  }
+
+  const syncScrollTopVisibility = () => {
+    const container = getPageScrollContainer()
+    view.isScrollTopVisible = container instanceof HTMLElement
+      ? container.scrollTop > 160
+      : window.scrollY > 160
+  }
+
+  const scrollToQuestionTop = () => {
+    getPageScrollContainer().scrollTo({ behavior: 'smooth', top: 0 })
+  }
+
+  const scrollToTarget = (target: HTMLElement | null) => {
+    if (!target) return
+
+    const container = getScrollContainer(target)
+    const header = document.querySelector<HTMLElement>('.question-topbar')
+    const offset = (header?.getBoundingClientRect().height ?? 0) + 12
+    const targetRect = target.getBoundingClientRect()
+    const top = container instanceof HTMLElement
+      ? targetRect.top - container.getBoundingClientRect().top + container.scrollTop - offset
+      : targetRect.top + window.scrollY - offset
+
+    container.scrollTo({ behavior: 'smooth', top: Math.max(0, top) })
+  }
+
+  const goToHelperQuestion = async (questionId: string) => {
+    closeHelperModal()
+    view.activeHelperCategoryId = null
+    view.activeHelperQuestionId = questionId
+    if (activeHelperHighlightTimeout) window.clearTimeout(activeHelperHighlightTimeout)
+    await nextTick()
+    scrollToTarget(document.querySelector<HTMLElement>(`[data-question-id="${questionId}"]`))
+    activeHelperHighlightTimeout = window.setTimeout(() => {
+      view.activeHelperCategoryId = null
+      view.activeHelperQuestionId = null
+    }, 1600)
+  }
+
+  const goToHelperCategory = async (categoryId: string) => {
+    closeHelperModal()
+    view.activeHelperQuestionId = null
+    view.activeHelperCategoryId = categoryId
+    if (activeHelperHighlightTimeout) window.clearTimeout(activeHelperHighlightTimeout)
+    await nextTick()
+    scrollToTarget(document.querySelector<HTMLElement>(`[data-category-id="${categoryId}"]`))
+    activeHelperHighlightTimeout = window.setTimeout(() => {
+      view.activeHelperCategoryId = null
+      view.activeHelperQuestionId = null
+    }, 1600)
+  }
+
+  onMounted(() => {
+    pageScrollContainer = getPageScrollContainer()
+    pageScrollContainer.addEventListener('scroll', syncScrollTopVisibility, { passive: true })
+    syncScrollTopVisibility()
+  })
+
+  onBeforeUnmount(() => {
+    pageScrollContainer?.removeEventListener('scroll', syncScrollTopVisibility)
+    if (activeHelperHighlightTimeout) window.clearTimeout(activeHelperHighlightTimeout)
+  })
 
   const categories = computed(() => checklistVm.categoryCards)
   const categoryCount = computed(() => categories.value.length)
@@ -45,23 +130,8 @@ export const useQuestionVm = defineStore('questionVm', () => {
 
     return categories.value
       .map((category) => {
-        const questions = checklistVm.view.questions
-          .filter((question) => question.categoryId === category.id)
-          .filter((question) => question.name.toLowerCase().includes(normalizedSearch))
-          .map((question, index) => ({
-            number: index + 1,
-            id: question.id,
-            name: question.name,
-            service: question.service,
-            serviceAbbreviation: question.service.slice(0, 2).toUpperCase(),
-            badge: question.requiresDoubleCheck
-              ? 'Cek ganda'
-              : question.requiresFinalChecker
-                ? 'Pemeriksa akhir'
-                : question.requiresCheckTime
-                  ? 'Jam cek'
-                  : null
-          }))
+        const questions = checklistVm.questionRowsByCategory[category.id]
+          ?.filter((question) => question.name.toLowerCase().includes(normalizedSearch)) ?? []
 
         return {
           category,
@@ -74,15 +144,24 @@ export const useQuestionVm = defineStore('questionVm', () => {
       .filter((group) => group.questions.length > 0)
   })
 
+  const helperCategoryResults = computed(() => {
+    const normalizedSearch = view.helperSearchTerm.trim().toLowerCase()
+
+    return categories.value
+      .filter((category) => category.name.toLowerCase().includes(normalizedSearch))
+      .map((category) => ({
+        id: category.id,
+        name: category.name,
+        questionCount: category.questionCount
+      }))
+  })
+
   const helperResults = computed(() => {
     const normalizedSearch = view.helperSearchTerm.trim().toLowerCase()
 
     return questionGroups.value.flatMap((group) =>
       group.questions
-        .filter((question) =>
-          group.category.name.toLowerCase().includes(normalizedSearch) ||
-          question.name.toLowerCase().includes(normalizedSearch)
-        )
+        .filter((question) => question.name.toLowerCase().includes(normalizedSearch))
         .map((question) => ({
           id: question.id,
           category: group.category.name,
@@ -243,6 +322,7 @@ export const useQuestionVm = defineStore('questionVm', () => {
     infoItems,
     questionGroups,
     getFieldLayoutClass,
+    helperCategoryResults,
     helperResults,
     isServiceColumn,
     getServiceAnswerValue,
@@ -260,6 +340,9 @@ export const useQuestionVm = defineStore('questionVm', () => {
     setNumberAnswerFromEvent,
     setBooleanAnswerFromEvent,
     saveAnswers,
-    saveAllAnswers
+    saveAllAnswers,
+    scrollToQuestionTop,
+    goToHelperQuestion,
+    goToHelperCategory
   }
 })

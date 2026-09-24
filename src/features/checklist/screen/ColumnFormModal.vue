@@ -120,6 +120,10 @@ const modalVm = useColumnManagerModalVm()
             <input v-model="modalVm.formVm.form.required" type="checkbox" />
             Wajib diisi
           </label>
+          <label class="checklist-column-form__check">
+            <input v-model="modalVm.formVm.form.boldValue" type="checkbox" />
+            Bold value
+          </label>
           <p v-if="modalVm.error" class="status-message">
             {{ modalVm.error }}
           </p>

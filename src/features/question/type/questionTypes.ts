@@ -14,4 +14,7 @@ export interface QuestionScreenState {
   workDate: string
   answers: Record<string, string | number | boolean>
   savedQuestionIds: string[]
+  isScrollTopVisible: boolean
+  activeHelperCategoryId: string | null
+  activeHelperQuestionId: string | null
 }

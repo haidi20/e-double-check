@@ -61,6 +61,7 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
     form.mode = editingColumn.value?.mode ?? columnFormState.mode
     form.required = editingColumn.value?.required ?? columnFormState.required
     form.gridSpan = editingColumn.value?.gridSpan ?? defaultGridSpan(editingColumn.value)
+    form.boldValue = editingColumn.value?.boldValue ?? columnFormState.boldValue
     form.error = columnFormState.error
   }
 
@@ -80,7 +81,8 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
       type: form.type,
       mode: form.mode,
       required: form.required,
-      gridSpan: form.gridSpan
+      gridSpan: form.gridSpan,
+      boldValue: form.boldValue
     })
 
     if (isSuccess) {

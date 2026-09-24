@@ -58,6 +58,7 @@ const vm = useCategoryQuestionsModalVm()
                 v-else-if="column.type === 'text'"
                 v-model="vm.form.values[column.id]"
                 type="text"
+                :class="{ 'is-bold': column.boldValue }"
                 :readonly="column.mode === 'read-only'"
               />
               <input

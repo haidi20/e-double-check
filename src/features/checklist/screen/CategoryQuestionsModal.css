@@ -99,6 +99,10 @@
   resize: vertical;
 }
 
+.category-questions-modal__field input.is-bold {
+  font-weight: 800;
+}
+
 .category-questions-modal__boolean {
   align-items: center;
   background: #fff;

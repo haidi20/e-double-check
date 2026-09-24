@@ -15,5 +15,8 @@ export const questionScreenState: QuestionScreenState = {
   searchTerm: '',
   workDate: new Date().toISOString().slice(0, 10),
   answers: {},
-  savedQuestionIds: []
+  savedQuestionIds: [],
+  isScrollTopVisible: false,
+  activeHelperCategoryId: null,
+  activeHelperQuestionId: null
 }

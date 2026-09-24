@@ -20,10 +20,15 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   const isCompactSidebarRoute = computed(() =>
     view.compactSidebarRouteNames.includes(String(route.name))
   )
+  const routeRole = computed<AuthRole | null>(() => {
+    const role = route.query.role
+
+    return role === 'admin' || role === 'employee' ? role : null
+  })
   const isMobileDashboardRoute = computed(
     () =>
       (route.name === 'dashboard' || route.name === 'history' || route.name === 'question') &&
-      authVm.selectedRole === 'employee'
+      (routeRole.value === 'employee' || authVm.selectedRole === 'employee')
   )
   const isQuestionRoute = computed(() => route.name === 'question')
 

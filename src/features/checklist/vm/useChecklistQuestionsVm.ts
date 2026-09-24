@@ -50,7 +50,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
       id: category.id,
       name: category.name,
       description: category.description,
-      questionCount: category.questionCount,
+      questionCount: questionRowsByCategory.value[category.id]?.length ?? 0,
       icon: categoryIconMap[category.id] ?? defaultCategoryIcon,
       isVisible: category.isVisible,
       columns: category.columns,
@@ -58,6 +58,30 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         (column) => column.label.trim().toLowerCase() !== 'no'
       )
     }))
+  )
+
+  const questionRowsByCategory = computed<Record<string, ChecklistQuestionRow[]>>(() =>
+    Object.fromEntries(
+      view.categories.map((category: ChecklistCategory) => [
+        category.id,
+        view.questions
+          .filter((question) => question.categoryId === category.id)
+          .map((question, index) => ({
+            number: index + 1,
+            id: question.id,
+            name: question.name,
+            service: question.service,
+            serviceAbbreviation: question.service.slice(0, 2).toUpperCase(),
+            badge: question.requiresDoubleCheck
+              ? 'Cek ganda'
+              : question.requiresFinalChecker
+                ? 'Pemeriksa akhir'
+                : question.requiresCheckTime
+                  ? 'Jam cek'
+                  : null
+          }))
+      ])
+    )
   )
 
   const openCategory = (categoryId: string) => {
@@ -274,7 +298,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     view.columnModal.columnFormError = ''
   }
 
-  const addColumn = (input: { label: string; type: ChecklistColumn['type']; mode: ChecklistColumnMode; required: boolean; gridSpan: ChecklistColumnGridSpan }) => {
+  const addColumn = (input: { label: string; type: ChecklistColumn['type']; mode: ChecklistColumnMode; required: boolean; gridSpan: ChecklistColumnGridSpan; boldValue: boolean }) => {
     if (!view.columnModal.columnModalCategoryId) {
       return false
     }
@@ -316,6 +340,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         existing.mode = input.mode
         existing.required = input.required
         existing.gridSpan = input.gridSpan
+        existing.boldValue = input.boldValue
       }
     } else {
       const nextNumber = category.columns.reduce((max, column) => {
@@ -330,7 +355,8 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         type: input.type,
         mode: input.mode,
         required: input.required,
-        gridSpan: input.gridSpan
+        gridSpan: input.gridSpan,
+        boldValue: input.boldValue
       })
     }
 
@@ -358,6 +384,7 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     view,
     columnModal: view.columnModal,
     categoryCards,
+    questionRowsByCategory,
     openCategory,
     toggleCategoryVisibility,
     openQuestionModal,

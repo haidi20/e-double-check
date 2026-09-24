@@ -1,26 +1,7 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useQuestionVm } from '@/features/question/vm/useQuestionVm'
 
 const vm = useQuestionVm()
-const isScrollTopVisible = ref(false)
-
-function syncScrollTopVisibility() {
-  isScrollTopVisible.value = window.scrollY > 160
-}
-
-function scrollToQuestionTop() {
-  window.scrollTo({ behavior: 'smooth', top: 0 })
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', syncScrollTopVisibility, { passive: true })
-  syncScrollTopVisibility()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', syncScrollTopVisibility)
-})
 </script>
 
 <template>
@@ -74,7 +55,13 @@ onBeforeUnmount(() => {
           />
         </label>
 
-      <section v-for="group in vm.questionGroups" :key="group.category.id" class="question-workspace">
+      <section
+        v-for="group in vm.questionGroups"
+        :key="group.category.id"
+        class="question-workspace"
+        :class="{ 'is-helper-active': vm.view.activeHelperCategoryId === group.category.id }"
+        :data-category-id="group.category.id"
+      >
         <header class="question-workspace__heading">
           <div>
             <p class="question-workspace__eyebrow">Kategori</p>
@@ -88,7 +75,13 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="question-answers">
-          <div v-for="question in group.questions" :key="question.id" class="question-answer-item">
+          <div
+            v-for="question in group.questions"
+            :key="question.id"
+            class="question-answer-item"
+            :class="{ 'is-helper-active': vm.view.activeHelperQuestionId === question.id }"
+            :data-question-id="question.id"
+          >
             <header>
               <span>{{ String(question.number).padStart(2, '0') }}</span>
               <strong>{{ question.name }}</strong>
@@ -110,6 +103,7 @@ onBeforeUnmount(() => {
                 <span
                   v-else-if="column.mode === 'input'"
                   class="question-answer-fields__text"
+                  :class="{ 'is-bold': column.boldValue }"
                 >
                   {{ vm.getAnswerValue(question.id, column.id) }}
                 </span>
@@ -178,11 +172,11 @@ onBeforeUnmount(() => {
     </button>
 
     <button
-      v-show="isScrollTopVisible"
+      v-show="vm.view.isScrollTopVisible"
       type="button"
       class="question-scroll-top"
       aria-label="Gulir ke atas"
-      @click="scrollToQuestionTop()"
+      @click="vm.scrollToQuestionTop()"
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m5 15 7-7 7 7" />
@@ -216,10 +210,20 @@ onBeforeUnmount(() => {
 
         <div class="question-helper-modal__results">
           <button
+            v-for="result in vm.helperCategoryResults"
+            :key="`category-${result.id}`"
+            type="button"
+            @click="vm.goToHelperCategory(result.id)"
+          >
+            <strong>{{ result.name }}</strong>
+            <small>Kategori - {{ result.questionCount }} pertanyaan</small>
+          </button>
+
+          <button
             v-for="result in vm.helperResults"
             :key="result.id"
             type="button"
-            @click="vm.closeHelperModal()"
+            @click="vm.goToHelperQuestion(result.id)"
           >
             <strong>{{ result.name }}</strong>
             <small>{{ result.category }}</small>

@@ -7,4 +7,8 @@ import '@/core/styles/featureScreens.css'
 import App from '@/App.vue'
 import { router } from '@/core/router'
 
-createApp(App).use(createPinia()).use(router).mount('#app')
+const app = createApp(App).use(createPinia()).use(router)
+
+void router.isReady().then(() => {
+  app.mount('#app')
+})

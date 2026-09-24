@@ -25,7 +25,13 @@ export const useAuthVm = defineStore('authVm', () => {
   const view = reactive({ ...authState.view })
   registerStateHmr(view, 'authState')
   const storedRole = typeof localStorage !== 'undefined' ? localStorage.getItem('e-double-check-role') : null
-  const selectedRole = ref<AuthRole | null>(storedRole === 'admin' || storedRole === 'employee' ? storedRole : null)
+  const urlRole = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('role')
+    : null
+  const normalizedUrlRole = urlRole === 'admin' || urlRole === 'employee' ? urlRole : null
+  const selectedRole = ref<AuthRole | null>(
+    normalizedUrlRole ?? (storedRole === 'admin' || storedRole === 'employee' ? storedRole : null)
+  )
   const isLoading = ref(false)
   const roleOptionsRef = ref(roleOptions)
 

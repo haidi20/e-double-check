@@ -178,8 +178,8 @@
 
 .question-date {
   align-items: center;
-  background: #f5f9ff;
-  border: 1px solid #dcecf8;
+  background: #fff;
+  border: 1px solid #e8ebf0;
   border-radius: 16px;
   color: #667085;
   display: flex;
@@ -191,7 +191,7 @@
 }
 
 .question-date input {
-  background: transparent;
+  background: #fff;
   border: 0;
   color: #172033;
   font-size: 0.8rem;
@@ -357,6 +357,13 @@
   box-shadow: 0 12px 30px rgba(15, 42, 82, 0.06);
   margin-top: 18px;
   padding: 18px 16px;
+  scroll-margin-top: 78px;
+  transition: background-color 0.45s ease, box-shadow 0.45s ease;
+}
+
+.question-workspace.is-helper-active {
+  background-color: #e8f4fc;
+  box-shadow: inset 3px 0 0 #168be0;
 }
 
 .question-workspace__heading {
@@ -444,7 +451,15 @@
 }
 
 .question-answer-item {
+  border-radius: 12px;
+  scroll-margin-top: 78px;
+  transition: background-color 0.45s ease, box-shadow 0.45s ease;
   padding: 0;
+}
+
+.question-answer-item.is-helper-active {
+  background-color: #e8f4fc;
+  box-shadow: inset 3px 0 0 #168be0;
 }
 
 .question-answer-item header {
@@ -514,6 +529,10 @@
   min-height: 38px;
   padding: 8px 10px;
   white-space: pre-wrap;
+}
+
+.question-answer-fields__text.is-bold {
+  font-weight: 850;
 }
 
 .question-answer-fields small {

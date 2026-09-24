@@ -10,6 +10,7 @@ export interface ChecklistColumn {
   mode: ChecklistColumnMode
   required: boolean
   gridSpan?: ChecklistColumnGridSpan
+  boldValue?: boolean
 }
 
 export interface ChecklistCategory {

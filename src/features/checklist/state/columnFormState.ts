@@ -6,6 +6,7 @@ export interface ColumnFormState {
   mode: ChecklistColumnMode
   required: boolean
   gridSpan: ChecklistColumnGridSpan
+  boldValue: boolean
   error: string
 }
 
@@ -15,5 +16,6 @@ export const columnFormState: ColumnFormState = {
   mode: 'read-only',
   required: false,
   gridSpan: 6,
+  boldValue: false,
   error: ''
 }

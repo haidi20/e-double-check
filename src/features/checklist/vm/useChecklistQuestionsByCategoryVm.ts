@@ -26,22 +26,7 @@ export const useChecklistQuestionsByCategoryVm = defineStore('checklistQuestions
       return []
     }
 
-    return questionsVm.view.questions
-      .filter((question) => question.categoryId === categoryId.value)
-      .map((question, index) => ({
-        number: index + 1,
-        id: question.id,
-        name: question.name,
-        service: question.service,
-        serviceAbbreviation: question.service.slice(0, 2).toUpperCase(),
-        badge: question.requiresDoubleCheck
-          ? 'Cek ganda'
-          : question.requiresFinalChecker
-            ? 'Pemeriksa akhir'
-            : question.requiresCheckTime
-              ? 'Jam cek'
-              : null
-      }))
+    return questionsVm.questionRowsByCategory[categoryId.value] ?? []
   })
 
   const pageHeading = computed(() =>
