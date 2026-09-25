@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import OutletFormModal from '@/features/master-data/outlets/screen/OutletFormModal.vue'
 import { useOutletsVm } from '@/features/master-data/outlets/vm/useOutletsVm'
+import { usePageShortcuts } from '@/core/composables/usePageShortcuts'
+import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
 
 const vm = useOutletsVm()
+const shortcutsVm = useShortcutsVm()
+
+usePageShortcuts([
+  { commandId: 'page.outlets.new', handler: () => vm.openCreateModal() }
+])
 </script>
 
 <template>
@@ -13,7 +20,13 @@ const vm = useOutletsVm()
         <h2>{{ vm.view.headingTitle }}</h2>
         <p>{{ vm.view.description }}</p>
       </div>
-      <button type="button" class="primary-button" @click="vm.openCreateModal">
+      <button
+        type="button"
+        class="primary-button"
+        :title="`Tambah Warung (${shortcutsVm.getBindingFor('page.outlets.new')})`"
+        :aria-keyshortcuts="shortcutsVm.getBindingFor('page.outlets.new') ?? undefined"
+        @click="vm.openCreateModal"
+      >
         {{ vm.view.primaryActionLabel }}
       </button>
     </section>

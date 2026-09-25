@@ -165,6 +165,24 @@ export const appState: AppState = {
       routePath: '/roles',
       icon: 'M12 3 20 7v5c0 5-3.4 8.1-8 10-4.6-1.9-8-5-8-10V7l8-4Zm-3 9 2 2 4-5',
       component: lazyView(() => import('@/features/settings/roles/screen/RolesScreen.vue'))
+    },
+    {
+      id: 'shortcuts',
+      label: 'Keyboard Shortcuts',
+      shortLabel: 'Shortcuts',
+      section: 'Pengaturan',
+      routePath: '/shortcuts',
+      icon: 'M4 6h16v12H4V6Zm4 3h2M14 9h2M4 12h2M14 12h2M4 15h2M14 15h2',
+      component: lazyView(() => import('@/features/settings/shortcuts/screen/ShortcutCheatSheetScreen.vue'))
+    },
+    {
+      id: 'shortcut-settings',
+      label: 'Pengaturan Shortcut',
+      shortLabel: 'Atur Shortcut',
+      section: 'Pengaturan',
+      routePath: '/settings/shortcuts',
+      icon: 'M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5ZM19.4 15a1.8 1.8 0 0 0 .36 2l.06.06-2.12 2.12-.06-.06a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1 1.64V20.5h-3V20.4a1.8 1.8 0 0 0-1-1.64 1.8 1.8 0 0 0-2 .36l-.06.06-2.12-2.12.06-.06a1.8 1.8 0 0 0 .36-2 1.8 1.8 0 0 0-1.64-1H5.5v-3H5.6a1.8 1.8 0 0 0 1.64-1 1.8 1.8 0 0 0-.36-2l-.06-.06 2.12-2.12.06.06a1.8 1.8 0 0 0 2 .36 1.8 1.8 0 0 0 1-1.64V3.5h3v.1a1.8 1.8 0 0 0 1 1.64 1.8 1.8 0 0 0 2-.36l.06-.06 2.12 2.12-.06.06a1.8 1.8 0 0 0-.36 2 1.8 1.8 0 0 0 1.64 1H20.5v3H20.4a1.8 1.8 0 0 0-1 .64Z',
+      component: lazyView(() => import('@/features/settings/shortcuts/screen/ShortcutSettingsScreen.vue'))
     }
   ]
 }

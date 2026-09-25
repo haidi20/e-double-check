@@ -83,6 +83,11 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     })
   }
 
+  const openCheatSheet = async () => {
+    closeProfileMenu()
+    await router.push('/shortcuts')
+  }
+
   return {
     view,
     isLoginRoute,
@@ -97,6 +102,7 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     closeProfileMenu,
     logout,
     openQuestionPage,
+    openCheatSheet,
     shell: computed(() => appVm.shell),
     activeScreen: computed(() => appVm.activeScreen),
     isMobileMenuOpen: computed(() => appVm.isMobileMenuOpen)

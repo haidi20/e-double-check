@@ -2,9 +2,16 @@
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
 import ColumnFormModal from '@/features/checklist/screen/ColumnFormModal.vue'
 import { useColumnManagerModalVm } from '@/features/checklist/vm/useColumnManagerModalVm'
+import { usePageShortcuts } from '@/core/composables/usePageShortcuts'
+import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
 
 const vm = useChecklistQuestionsVm()
 const columnManagerModalVm = useColumnManagerModalVm()
+const shortcutsVm = useShortcutsVm()
+
+usePageShortcuts([
+  { commandId: 'page.checklist.new', handler: () => vm.openQuestionModal(vm.categoryCards[0]?.id ?? '') }
+])
 </script>
 
 <template>

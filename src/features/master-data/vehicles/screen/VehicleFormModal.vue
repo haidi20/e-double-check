@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useVehiclesVm } from '@/features/master-data/vehicles/vm/useVehiclesVm'
 
 const vm = useVehiclesVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true"
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true"
     aria-label="Modal form kendaraan">
     <section class="feature-form-modal__dialog feature-form-modal__dialog--lg">
       <header class="feature-form-modal__header">

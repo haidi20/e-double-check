@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useServicesVm } from '@/features/master-data/services/vm/useServicesVm'
 
 const vm = useServicesVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal form layanan">
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal form layanan">
     <section class="feature-form-modal__dialog">
       <header class="feature-form-modal__header">
         <div>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import SearchableSelect from '@/core/components/SearchableSelect.vue'
 import { useSuppliersVm } from '@/features/master-data/suppliers/vm/useSuppliersVm'
 
@@ -6,7 +6,7 @@ const vm = useSuppliersVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal form pemasok">
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal form pemasok">
     <section class="feature-form-modal__dialog feature-form-modal__dialog--lg">
       <header class="feature-form-modal__header">
         <div>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import SearchableSelect from '@/core/components/SearchableSelect.vue'
 import { useCategoryQuestionsModalVm } from '@/features/checklist/vm/useCategoryQuestionsModalVm'
 
@@ -6,7 +6,7 @@ const vm = useCategoryQuestionsModalVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Kelola pertanyaan kategori">
+  <div v-if="vm.view.isOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Kelola pertanyaan kategori">
     <section class="feature-form-modal__dialog feature-form-modal__dialog--lg category-questions-modal">
       <header class="feature-form-modal__header category-questions-modal__header">
         <div>

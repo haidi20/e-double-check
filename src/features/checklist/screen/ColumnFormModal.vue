@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useColumnManagerModalVm } from '@/features/checklist/vm/useColumnManagerModalVm'
 
 const modalVm = useColumnManagerModalVm()
 </script>
 
 <template>
-  <div v-if="modalVm.view.isOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal kelola kolom">
+  <div v-if="modalVm.view.isOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal kelola kolom">
     <section class="feature-form-modal__dialog feature-form-modal__dialog--lg column-manager-modal">
       <header class="feature-form-modal__header column-manager__header">
         <div>

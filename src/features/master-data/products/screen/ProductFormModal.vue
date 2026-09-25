@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import SearchableSelect from '@/core/components/SearchableSelect.vue'
 import { useProductsVm } from '@/features/master-data/products/vm/useProductsVm'
 
@@ -6,7 +6,7 @@ const vm = useProductsVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal form barang">
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal form barang">
     <section class="feature-form-modal__dialog feature-form-modal__dialog--lg">
       <header class="feature-form-modal__header">
         <div>

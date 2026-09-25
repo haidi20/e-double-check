@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useOrdersVm } from '@/features/orders/vm/useOrdersVm'
 
 const vm = useOrdersVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isReturnModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal retur barang">
+  <div v-if="vm.view.isReturnModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal retur barang">
     <section class="feature-form-modal__dialog">
       <header class="feature-form-modal__header">
         <div>

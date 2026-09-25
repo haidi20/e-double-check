@@ -1,8 +1,51 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { onMounted } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useAppShellVm } from '@/core/vm/useAppShellVm'
+import { useKeyboardShortcuts } from '@/core/composables/useKeyboardShortcuts'
+import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
+import { registerShortcutHandler } from '@/features/settings/shortcuts/vm/shortcutHandlers'
 
 const vm = useAppShellVm()
+const router = useRouter()
+const shortcutsVm = useShortcutsVm()
+
+useKeyboardShortcuts()
+
+const shortcutHint = (screenId: string) => {
+  const cmd = shortcutsVm.commands.find((c) => c.id === `nav.${screenId}`)
+  if (!cmd) return undefined
+  const binding = shortcutsVm.getBindingFor(cmd.id)
+  return binding ? `${cmd.label} (${binding})` : cmd.label
+}
+
+onMounted(() => {
+  // Register global navigation handlers
+  shortcutsVm.commands
+    .filter((cmd) => cmd.scope === 'navigation' && cmd.routePath)
+    .forEach((cmd) => {
+      registerShortcutHandler(cmd.handler, () => {
+        void router.push(cmd.routePath!)
+      })
+    })
+
+  // Register global action handlers
+  registerShortcutHandler('global.open-cheatsheet', () => {
+    void router.push('/shortcuts')
+  })
+  registerShortcutHandler('global.toggle-sidebar', () => {
+    vm.toggleMobileMenu()
+  })
+  registerShortcutHandler('global.focus-search', () => {
+    const searchInput = document.querySelector<HTMLInputElement>(
+      'input[type="search"], input[type="text"][placeholder*="Cari"]'
+    )
+    searchInput?.focus()
+  })
+  registerShortcutHandler('global.logout', () => {
+    void vm.logout()
+  })
+})
 </script>
 
 <template>
@@ -77,6 +120,8 @@ const vm = useAppShellVm()
             :key="item.id"
             :to="item.routePath"
             :class="['dashboard-sidebar-link--' + item.id, { 'is-active': vm.isNavigationActive(item.id) }]"
+            :title="shortcutHint(item.id)"
+            :aria-keyshortcuts="shortcutsVm.getBindingFor(`nav.${item.id}`) ?? undefined"
             @click="vm.closeMobileMenu"
           >
             <span class="app-sidebar__icon" aria-hidden="true">
@@ -159,6 +204,25 @@ const vm = useAppShellVm()
                   <strong>{{ vm.shell.userName }}</strong>
                   <small>{{ vm.shell.userLocation }}</small>
                 </div>
+                <button
+                  type="button"
+                  class="app-topbar__dropdown-item"
+                  aria-keyshortcuts="Ctrl+K Ctrl+S"
+                  @click="vm.openCheatSheet"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="M6 8h2M12 8h2M18 8h2M6 12h2M12 12h2M18 12h2M6 16h2M12 16h2M18 16h2" />
+                  </svg>
+                  Keyboard Shortcuts
+                </button>
                 <button
                   type="button"
                   class="app-topbar__dropdown-item app-topbar__dropdown-item--danger"

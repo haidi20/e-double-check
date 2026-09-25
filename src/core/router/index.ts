@@ -31,6 +31,11 @@ export const router = createRouter({
       name: 'question',
       component: () => import('@/features/question/screen/QuestionScreen.vue')
     },
+    {
+      path: '/settings/shortcuts',
+      name: 'shortcut-settings',
+      component: () => import('@/features/settings/shortcuts/screen/ShortcutSettingsScreen.vue')
+    },
     ...appState.navigationItems.map((item) => ({
       path: item.routePath,
       name: item.id,

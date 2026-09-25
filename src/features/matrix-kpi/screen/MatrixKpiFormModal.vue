@@ -1,11 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useMatrixKpiVm } from '@/features/matrix-kpi/vm/useMatrixKpiVm'
 
 const vm = useMatrixKpiVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal pengaturan KPI">
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal pengaturan KPI">
     <section class="feature-form-modal__dialog">
       <header class="feature-form-modal__header">
         <div>

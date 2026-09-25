@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import SearchableSelect from '@/core/components/SearchableSelect.vue'
 import { useOutletsVm } from '@/features/master-data/outlets/vm/useOutletsVm'
 
@@ -6,7 +6,7 @@ const vm = useOutletsVm()
 </script>
 
 <template>
-  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" role="dialog" aria-modal="true" aria-label="Modal form warung">
+  <div v-if="vm.view.isFormModalOpen" class="feature-form-modal" data-shortcut-modal="true" role="dialog" aria-modal="true" aria-label="Modal form warung">
     <section class="feature-form-modal__dialog">
       <header class="feature-form-modal__header">
         <div>
