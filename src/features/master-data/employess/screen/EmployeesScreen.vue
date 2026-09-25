@@ -2,8 +2,15 @@
 import { onMounted } from 'vue'
 import EmployeeFormModal from '@/features/master-data/employess/screen/EmployeeFormModal.vue'
 import { useEmployeesVm } from '@/features/master-data/employess/vm/useEmployeesVm'
+import { usePageShortcuts } from '@/core/composables/usePageShortcuts'
+import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
 
 const vm = useEmployeesVm()
+const shortcutsVm = useShortcutsVm()
+
+usePageShortcuts([
+  { commandId: 'page.employees.new', handler: () => vm.openFormModal() }
+])
 
 onMounted(() => {
   document.getElementById('employee-table')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -18,7 +25,13 @@ onMounted(() => {
         <h2>{{ vm.view.headingTitle }}</h2>
         <p>{{ vm.view.description }}</p>
       </div>
-      <button type="button" class="primary-button" @click="vm.openFormModal">{{ vm.view.primaryActionLabel }}</button>
+      <button
+        type="button"
+        class="primary-button"
+        :title="`${vm.view.primaryActionLabel} (${shortcutsVm.getBindingFor('page.employees.new')})`"
+        :aria-keyshortcuts="shortcutsVm.getBindingFor('page.employees.new') ?? undefined"
+        @click="vm.openFormModal"
+      >{{ vm.view.primaryActionLabel }}</button>
     </section>
 
     <section id="employee-table" class="panel">
