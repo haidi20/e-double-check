@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useShortcutsVm } from '../vm/useShortcutsVm'
@@ -96,50 +96,61 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="feature-screen cheatsheet-screen" @keydown="handleKeydown">
-    <section class="page-heading">
-      <div>
-        <p class="eyebrow">Referensi Cepat</p>
-        <h2>Keyboard Shortcuts</h2>
-        <p>Daftar semua aksi dan kombinasi tombol.</p>
-      </div>
-    </section>
-
-    <section class="panel cheatsheet-panel">
+  <main class="cheatsheet-screen" @keydown="handleKeydown">
+    <div class="cheatsheet-shell">
       <label class="cheatsheet-search">
-        <span aria-hidden="true">›</span>
+        <svg class="cheatsheet-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
         <input
           ref="searchInput"
           v-model="shortcutsVm.cheatSheet.searchQuery"
           type="search"
-          placeholder="Cari command..."
+          placeholder="Cari aksi atau shortcut..."
           aria-label="Cari command"
           role="combobox"
           aria-expanded="true"
           :aria-activedescendant="shortcutsVm.cheatSheet.activeId ?? undefined"
           @keydown="handleKeydown"
         />
+        <kbd class="cheatsheet-search__hint">Esc</kbd>
       </label>
 
-      <ul class="cheatsheet-list" role="listbox" aria-label="Daftar shortcut">
-        <li
-          v-for="cmd in filteredCommands"
-          :id="cmd.id"
-          :key="cmd.id"
-          :class="{ 'is-active': cmd.id === shortcutsVm.cheatSheet.activeId }"
-          role="option"
-          :aria-selected="cmd.id === shortcutsVm.cheatSheet.activeId"
-          @click="executeCommand(cmd)"
-          @mouseenter="setActive(cmd.id)"
-        >
-          <span class="cheatsheet-label" v-html="highlightLabel(cmd.label, shortcutsVm.cheatSheet.searchQuery)"></span>
-          <span class="cheatsheet-category">— {{ cmd.category }}</span>
-          <kbd class="cheatsheet-binding">{{ shortcutsVm.getBindingFor(cmd.id) ?? '' }}</kbd>
-        </li>
-        <li v-if="filteredCommands.length === 0" class="cheatsheet-empty">
-          No matching commands
-        </li>
-      </ul>
-    </section>
+      <div class="cheatsheet-body">
+        <ul class="cheatsheet-list" role="listbox" aria-label="Daftar shortcut">
+          <li
+            v-for="cmd in filteredCommands"
+            :id="cmd.id"
+            :key="cmd.id"
+            :class="{ 'is-active': cmd.id === shortcutsVm.cheatSheet.activeId }"
+            role="option"
+            :aria-selected="cmd.id === shortcutsVm.cheatSheet.activeId"
+            @click="executeCommand(cmd)"
+            @mouseenter="setActive(cmd.id)"
+          >
+            <div class="cheatsheet-row__left">
+              <span class="cheatsheet-label" v-html="highlightLabel(cmd.label, shortcutsVm.cheatSheet.searchQuery)"></span>
+              <span class="cheatsheet-description">{{ cmd.description }}</span>
+            </div>
+            <kbd class="cheatsheet-binding">{{ shortcutsVm.getBindingFor(cmd.id) ?? '' }}</kbd>
+          </li>
+          <li v-if="filteredCommands.length === 0" class="cheatsheet-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+              <path d="M8 11h6" />
+            </svg>
+            <span>Tidak ada hasil yang cocok</span>
+          </li>
+        </ul>
+      </div>
+
+      <footer class="cheatsheet-footer">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigasi</span>
+        <span><kbd>Enter</kbd> eksekusi</span>
+        <span><kbd>Esc</kbd> kembali</span>
+      </footer>
+    </div>
   </main>
 </template>
