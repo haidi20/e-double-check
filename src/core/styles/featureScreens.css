@@ -2604,6 +2604,44 @@
   white-space: nowrap;
 }
 
+.cheatsheet-edit__icon {
+  color: var(--sbm-neutral);
+  flex-shrink: 0;
+  height: 14px;
+  width: 14px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.cheatsheet-list li:hover .cheatsheet-edit__icon,
+.cheatsheet-list li.is-active .cheatsheet-edit__icon {
+  opacity: 0.6;
+}
+
+.cheatsheet-row--editing {
+  background: var(--sbm-primary-soft, #e8f0f8);
+  cursor: default;
+}
+
+.cheatsheet-editor {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+
+.cheatsheet-editor .shortcut-recorder {
+  border: none;
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  padding: 0;
+}
+
+.cheatsheet-editor .shortcut-recorder__input {
+  flex: 1;
+  min-width: 120px;
+}
+
 .cheatsheet-empty {
   align-items: center;
   color: var(--sbm-neutral);

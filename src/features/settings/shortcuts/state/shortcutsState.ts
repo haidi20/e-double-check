@@ -11,7 +11,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman utama',
     scope: 'navigation',
     routePath: '/dashboard',
-    defaultBinding: 'Ctrl+1',
+    defaultBinding: 'Alt+1',
     handler: 'nav.dashboard',
     category: 'Navigasi'
   },
@@ -21,7 +21,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman daftar pertanyaan',
     scope: 'navigation',
     routePath: '/checklist',
-    defaultBinding: 'Ctrl+2',
+    defaultBinding: 'Alt+2',
     handler: 'nav.questions',
     category: 'Navigasi'
   },
@@ -31,7 +31,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman layanan',
     scope: 'navigation',
     routePath: '/layanan',
-    defaultBinding: 'Ctrl+3',
+    defaultBinding: 'Alt+3',
     handler: 'nav.services',
     category: 'Navigasi'
   },
@@ -41,7 +41,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman warung',
     scope: 'navigation',
     routePath: '/outlets',
-    defaultBinding: 'Ctrl+4',
+    defaultBinding: 'Alt+4',
     handler: 'nav.outlets',
     category: 'Navigasi'
   },
@@ -51,7 +51,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman pegawai',
     scope: 'navigation',
     routePath: '/employees',
-    defaultBinding: 'Ctrl+5',
+    defaultBinding: 'Alt+5',
     handler: 'nav.employees',
     category: 'Navigasi'
   },

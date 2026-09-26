@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+﻿import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useShortcutsVm } from '../vm/useShortcutsVm'
 import { STORAGE_KEY } from '../state/shortcutsState'
@@ -11,8 +11,8 @@ describe('useShortcutsVm', () => {
 
   it('returns default binding when no override exists', () => {
     const vm = useShortcutsVm()
-    expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+1')
-    expect(vm.getBindingFor('nav.questions')).toBe('Ctrl+2')
+    expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
+    expect(vm.getBindingFor('nav.questions')).toBe('Alt+2')
     expect(vm.getBindingFor('global.open-cheatsheet')).toBe('Ctrl+K Ctrl+S')
     expect(vm.getBindingFor('page.employees.new')).toBe('Ctrl+N')
   })
@@ -51,7 +51,7 @@ describe('useShortcutsVm', () => {
     expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+Shift+D')
 
     vm.resetBinding('nav.dashboard')
-    expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+1')
+    expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
     expect(vm.bindings['nav.dashboard']?.isCustom).toBe(false)
   })
 
@@ -61,27 +61,27 @@ describe('useShortcutsVm', () => {
     vm.setBinding('nav.questions', 'Ctrl+Shift+Q')
 
     vm.resetAll()
-    expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+1')
-    expect(vm.getBindingFor('nav.questions')).toBe('Ctrl+2')
+    expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
+    expect(vm.getBindingFor('nav.questions')).toBe('Alt+2')
   })
 
   it('setBinding with same value as default removes override', () => {
     const vm = useShortcutsVm()
     vm.setBinding('nav.dashboard', 'Ctrl+Shift+D')
-    vm.setBinding('nav.dashboard', 'Ctrl+1')
+    vm.setBinding('nav.dashboard', 'Alt+1')
     expect(vm.bindings['nav.dashboard']?.isCustom).toBe(false)
   })
 
   it('detectConflict finds conflicting command', () => {
     const vm = useShortcutsVm()
-    const conflict = vm.detectConflict('Ctrl+1', 'nav.questions')
+    const conflict = vm.detectConflict('Alt+1', 'nav.questions')
     expect(conflict).toBeDefined()
     expect(conflict!.id).toBe('nav.dashboard')
   })
 
   it('detectConflict excludes the same command', () => {
     const vm = useShortcutsVm()
-    const conflict = vm.detectConflict('Ctrl+1', 'nav.dashboard')
+    const conflict = vm.detectConflict('Alt+1', 'nav.dashboard')
     expect(conflict).toBeUndefined()
   })
 
@@ -93,7 +93,7 @@ describe('useShortcutsVm', () => {
 
   it('setBinding sets lastConflict when there is a conflict', () => {
     const vm = useShortcutsVm()
-    vm.setBinding('nav.questions', 'Ctrl+1')
+    vm.setBinding('nav.questions', 'Alt+1')
     expect(vm.settings.lastConflict).toBe('nav.dashboard')
   })
 
@@ -106,7 +106,7 @@ describe('useShortcutsVm', () => {
 
   it('getCommandFor finds command by binding', () => {
     const vm = useShortcutsVm()
-    const cmd = vm.getCommandFor('Ctrl+1')
+    const cmd = vm.getCommandFor('Alt+1')
     expect(cmd).toBeDefined()
     expect(cmd!.id).toBe('nav.dashboard')
   })
@@ -149,7 +149,7 @@ describe('useShortcutsVm', () => {
   it('ignores corrupted localStorage data', () => {
     localStorage.setItem(STORAGE_KEY, 'not-valid-json')
     const vm = useShortcutsVm()
-    expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+1')
+    expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
   })
 
   it('ignores version mismatch in localStorage', () => {
@@ -158,6 +158,6 @@ describe('useShortcutsVm', () => {
       overrides: { 'nav.dashboard': 'Alt+D' }
     }))
     const vm = useShortcutsVm()
-    expect(vm.getBindingFor('nav.dashboard')).toBe('Ctrl+1')
+    expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
   })
 })

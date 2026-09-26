@@ -165,10 +165,10 @@ export function useKeyboardShortcuts() {
   }
 
   onMounted(() => {
-    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keydown', handleKeyDown, { capture: true })
   })
 
   onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeyDown)
+    document.removeEventListener('keydown', handleKeyDown, { capture: true })
   })
 }

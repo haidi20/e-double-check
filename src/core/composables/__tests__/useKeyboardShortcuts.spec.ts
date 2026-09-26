@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+﻿import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount, flushPromises } from '@vue/test-utils'
 import { defineComponent, h, nextTick } from 'vue'
@@ -44,7 +44,7 @@ describe('useKeyboardShortcuts', () => {
     document.body.innerHTML = ''
   })
 
-  it('dispatches navigation handler when Ctrl+1 is pressed', async () => {
+  it('dispatches navigation handler when Alt+1 is pressed', async () => {
     const router = createTestRouter()
     await router.push('/')
     await router.isReady()
@@ -53,7 +53,7 @@ describe('useKeyboardShortcuts', () => {
     registerShortcutHandler('nav.dashboard', handler)
 
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
-    pressKey({ ctrlKey: true, key: '1' })
+    pressKey({ altKey: true, key: '1' })
     await nextTick()
 
     expect(handler).toHaveBeenCalledOnce()
@@ -75,7 +75,7 @@ describe('useKeyboardShortcuts', () => {
     document.body.appendChild(input)
     input.focus()
 
-    input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, ctrlKey: true, key: '1' }))
+    input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, altKey: true, key: '1' }))
     await nextTick()
 
     expect(handler).not.toHaveBeenCalled()
@@ -119,7 +119,7 @@ describe('useKeyboardShortcuts', () => {
     modal.setAttribute('data-shortcut-modal', 'true')
     document.body.appendChild(modal)
 
-    pressKey({ ctrlKey: true, key: '1' })
+    pressKey({ altKey: true, key: '1' })
     await nextTick()
 
     expect(handler).not.toHaveBeenCalled()
@@ -234,5 +234,95 @@ describe('useKeyboardShortcuts', () => {
     expect(handler).not.toHaveBeenCalled()
     wrapper.unmount()
     unregisterShortcutHandler('nav.dashboard')
+  })
+
+  it('executes form save via DOM button click when modal is open', async () => {
+    const router = createTestRouter()
+    await router.push('/')
+    await router.isReady()
+
+    const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+
+    const modal = document.createElement('div')
+    modal.setAttribute('data-shortcut-modal', 'true')
+    modal.innerHTML = `
+      <div class="feature-form-modal__header">
+        <button class="ghost-button" id="close-btn">Tutup</button>
+      </div>
+      <div class="feature-form-modal__body">
+        <input id="form-field" />
+      </div>
+      <div class="feature-form-modal__footer">
+        <button class="primary-button" id="save-btn">Simpan</button>
+      </div>
+    `
+    document.body.appendChild(modal)
+
+    const saveBtn = modal.querySelector('#save-btn') as HTMLButtonElement
+    const closeBtn = modal.querySelector('#close-btn') as HTMLButtonElement
+    const saveSpy = vi.fn()
+    const closeSpy = vi.fn()
+    saveBtn.addEventListener('click', saveSpy)
+    closeBtn.addEventListener('click', closeSpy)
+
+    saveBtn.focus()
+    pressKey({ ctrlKey: true, key: 's' })
+    await nextTick()
+    expect(saveSpy).toHaveBeenCalledOnce()
+
+    closeBtn.focus()
+    pressKey({ key: 'Escape' })
+    await nextTick()
+    expect(closeSpy).toHaveBeenCalledOnce()
+
+    wrapper.unmount()
+  })
+
+  it('blocks other shortcuts when modal is open except form save/close', async () => {
+    const router = createTestRouter()
+    await router.push('/')
+    await router.isReady()
+
+    const navHandler = vi.fn()
+    registerShortcutHandler('nav.dashboard', navHandler)
+
+    const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+
+    const modal = document.createElement('div')
+    modal.setAttribute('data-shortcut-modal', 'true')
+    modal.innerHTML = '<button class="primary-button">Simpan</button>'
+    document.body.appendChild(modal)
+
+    pressKey({ altKey: true, key: '1' })
+    await nextTick()
+    expect(navHandler).not.toHaveBeenCalled()
+
+    wrapper.unmount()
+    unregisterShortcutHandler('nav.dashboard')
+  })
+
+  it('does not set pending chord when chord prefix times out', async () => {
+    const router = createTestRouter()
+    await router.push('/')
+    await router.isReady()
+
+    const handler = vi.fn()
+    registerShortcutHandler('global.open-cheatsheet', handler)
+
+    const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+
+    pressKey({ ctrlKey: true, key: 'k' })
+    await nextTick()
+
+    // Wait for chord timeout (1000ms)
+    await new Promise(resolve => setTimeout(resolve, 1100))
+
+    // Now press Ctrl+S alone - should NOT trigger the chord
+    pressKey({ ctrlKey: true, key: 's' })
+    await nextTick()
+    expect(handler).not.toHaveBeenCalled()
+
+    wrapper.unmount()
+    unregisterShortcutHandler('global.open-cheatsheet')
   })
 })

@@ -3,11 +3,13 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useShortcutsVm } from '../vm/useShortcutsVm'
 import { getShortcutHandler } from '../vm/shortcutHandlers'
+import ShortcutRecorder from './ShortcutRecorder.vue'
 import type { ShortcutCommand } from '../type/shortcutTypes'
 
 const shortcutsVm = useShortcutsVm()
 const router = useRouter()
 const searchInput = ref<HTMLInputElement | null>(null)
+const editingCommandId = ref<string | null>(null)
 
 function fuzzyMatch(text: string, query: string): boolean {
   if (!query) return true
@@ -68,7 +70,28 @@ async function executeActive() {
   await executeCommand(command)
 }
 
+function startEditing(commandId: string) {
+  editingCommandId.value = commandId
+}
+
+function stopEditing() {
+  editingCommandId.value = null
+  nextTick(() => searchInput.value?.focus())
+}
+
+function saveBinding(commandId: string, binding: string | null) {
+  shortcutsVm.setBinding(commandId, binding)
+  stopEditing()
+}
+
+function resetBinding(commandId: string) {
+  shortcutsVm.resetBinding(commandId)
+  stopEditing()
+}
+
 function handleKeydown(event: KeyboardEvent) {
+  if (editingCommandId.value) return
+
   switch (event.key) {
     case 'ArrowDown':
       event.preventDefault()
@@ -119,23 +142,40 @@ onMounted(() => {
 
       <div class="cheatsheet-body">
         <ul class="cheatsheet-list" role="listbox" aria-label="Daftar shortcut">
-          <li
-            v-for="cmd in filteredCommands"
-            :id="cmd.id"
-            :key="cmd.id"
-            :class="{ 'is-active': cmd.id === shortcutsVm.cheatSheet.activeId }"
-            role="option"
-            :aria-selected="cmd.id === shortcutsVm.cheatSheet.activeId"
-            @click="executeCommand(cmd)"
-            @mouseenter="setActive(cmd.id)"
-          >
-            <div class="cheatsheet-row__left">
-              <span class="cheatsheet-label" v-html="highlightLabel(cmd.label, shortcutsVm.cheatSheet.searchQuery)"></span>
-              <span class="cheatsheet-description">{{ cmd.description }}</span>
-            </div>
-            <kbd class="cheatsheet-binding">{{ shortcutsVm.getBindingFor(cmd.id) ?? '' }}</kbd>
-          </li>
-          <li v-if="filteredCommands.length === 0" class="cheatsheet-empty">
+          <template v-for="cmd in filteredCommands" :key="cmd.id">
+            <li
+              v-if="editingCommandId !== cmd.id"
+              :id="cmd.id"
+              :class="{ 'is-active': cmd.id === shortcutsVm.cheatSheet.activeId }"
+              role="option"
+              :aria-selected="cmd.id === shortcutsVm.cheatSheet.activeId"
+              @click="startEditing(cmd.id)"
+              @mouseenter="setActive(cmd.id)"
+            >
+              <div class="cheatsheet-row__left">
+                <span class="cheatsheet-label" v-html="highlightLabel(cmd.label, shortcutsVm.cheatSheet.searchQuery)"></span>
+                <span class="cheatsheet-description">{{ cmd.description }}</span>
+              </div>
+              <kbd class="cheatsheet-binding">{{ shortcutsVm.getBindingFor(cmd.id) ?? '' }}</kbd>
+              <svg class="cheatsheet-edit__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+            </li>
+            <li v-else class="cheatsheet-row--editing">
+              <div class="cheatsheet-row__left">
+                <span class="cheatsheet-label">{{ cmd.label }}</span>
+              </div>
+              <div class="cheatsheet-editor">
+                <ShortcutRecorder
+                  :command-id="cmd.id"
+                  @save="(binding: string | null) => saveBinding(cmd.id, binding)"
+                  @cancel="stopEditing"
+                  @reset="() => resetBinding(cmd.id)"
+                />
+              </div>
+            </li>
+          </template>
+          <li v-if="filteredCommands.length === 0 && !editingCommandId" class="cheatsheet-empty">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
@@ -147,6 +187,7 @@ onMounted(() => {
       </div>
 
       <footer class="cheatsheet-footer">
+        <span><kbd>Klik</kbd> ubah binding</span>
         <span><kbd>↑</kbd><kbd>↓</kbd> navigasi</span>
         <span><kbd>Enter</kbd> eksekusi</span>
         <span><kbd>Esc</kbd> kembali</span>
