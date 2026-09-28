@@ -1,7 +1,7 @@
 import type { ShortcutCommand } from '../type/shortcutTypes'
 
 export const STORAGE_KEY = 'edc-shortcut-bindings'
-export const STORAGE_VERSION = 1
+export const STORAGE_VERSION = 2
 
 export const shortcutCommands: ShortcutCommand[] = [
   // Navigation
@@ -63,7 +63,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     description: 'Buka halaman daftar shortcut',
     scope: 'global',
     routePath: '/shortcuts',
-    defaultBinding: 'Ctrl+K Ctrl+S',
+    defaultBinding: 'Ctrl+Alt+K',
     handler: 'global.open-cheatsheet',
     category: 'Global'
   },
@@ -90,7 +90,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     label: 'Keluar',
     description: 'Logout dari aplikasi',
     scope: 'global',
-    defaultBinding: 'Ctrl+Shift+Q',
+    defaultBinding: 'Ctrl+Alt+Q',
     handler: 'global.logout',
     category: 'Global'
   },
@@ -103,7 +103,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     scope: 'page',
     pageContext: 'checklist',
     routePath: '/checklist',
-    defaultBinding: 'Ctrl+N',
+    defaultBinding: 'Alt+N',
     handler: 'page.checklist.new',
     category: 'Halaman'
   },
@@ -114,7 +114,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     scope: 'page',
     pageContext: 'services',
     routePath: '/layanan',
-    defaultBinding: 'Ctrl+N',
+    defaultBinding: 'Alt+N',
     handler: 'page.services.new',
     category: 'Halaman'
   },
@@ -125,7 +125,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     scope: 'page',
     pageContext: 'outlets',
     routePath: '/outlets',
-    defaultBinding: 'Ctrl+N',
+    defaultBinding: 'Alt+N',
     handler: 'page.outlets.new',
     category: 'Halaman'
   },
@@ -136,7 +136,7 @@ export const shortcutCommands: ShortcutCommand[] = [
     scope: 'page',
     pageContext: 'employees',
     routePath: '/employees',
-    defaultBinding: 'Ctrl+N',
+    defaultBinding: 'Alt+N',
     handler: 'page.employees.new',
     category: 'Halaman'
   },

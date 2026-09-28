@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount, flushPromises } from '@vue/test-utils'
 import { defineComponent, h, nextTick } from 'vue'
@@ -157,7 +157,7 @@ describe('useKeyboardShortcuts', () => {
     wrapper.unmount()
   })
 
-  it('supports two-step chord (Ctrl+K then Ctrl+S)', async () => {
+  it('opens cheatsheet with Ctrl+Alt+K', async () => {
     const router = createTestRouter()
     await router.push('/')
     await router.isReady()
@@ -166,11 +166,7 @@ describe('useKeyboardShortcuts', () => {
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
     registerShortcutHandler('global.open-cheatsheet', handler)
 
-    pressKey({ ctrlKey: true, key: 'k' })
-    await nextTick()
-    expect(handler).not.toHaveBeenCalled()
-
-    pressKey({ ctrlKey: true, key: 's' })
+    pressKey({ ctrlKey: true, altKey: true, key: 'k' })
     await nextTick()
     expect(handler).toHaveBeenCalledOnce()
 
@@ -187,7 +183,7 @@ describe('useKeyboardShortcuts', () => {
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
     registerShortcutHandler('page.employees.new', handler)
 
-    pressKey({ ctrlKey: true, key: 'n' })
+    pressKey({ altKey: true, key: 'n' })
     await nextTick()
 
     expect(handler).toHaveBeenCalledOnce()
@@ -206,7 +202,7 @@ describe('useKeyboardShortcuts', () => {
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
     const shortcutsVm = useShortcutsVm()
 
-    pressKey({ ctrlKey: true, key: 'n' })
+    pressKey({ altKey: true, key: 'n' })
     await flushPromises()
 
     expect(router.currentRoute.value.path).toBe('/employees')
@@ -298,7 +294,7 @@ describe('useKeyboardShortcuts', () => {
     unregisterShortcutHandler('nav.dashboard')
   })
 
-  it('does not set pending chord when chord prefix times out', async () => {
+  it('does not trigger cheatsheet with Ctrl+K alone', async () => {
     const router = createTestRouter()
     await router.push('/')
     await router.isReady()
@@ -309,16 +305,10 @@ describe('useKeyboardShortcuts', () => {
 
     pressKey({ ctrlKey: true, key: 'k' })
     await nextTick()
-
-    // Wait for chord timeout (1000ms)
-    await new Promise(resolve => setTimeout(resolve, 1100))
-
-    // Now press Ctrl+S alone - should NOT trigger the chord
-    pressKey({ ctrlKey: true, key: 's' })
-    await nextTick()
     expect(handler).not.toHaveBeenCalled()
 
     wrapper.unmount()
     unregisterShortcutHandler('global.open-cheatsheet')
   })
+
 })

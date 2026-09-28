@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useShortcutsVm } from '../vm/useShortcutsVm'
 import { STORAGE_KEY } from '../state/shortcutsState'
@@ -13,8 +13,8 @@ describe('useShortcutsVm', () => {
     const vm = useShortcutsVm()
     expect(vm.getBindingFor('nav.dashboard')).toBe('Alt+1')
     expect(vm.getBindingFor('nav.questions')).toBe('Alt+2')
-    expect(vm.getBindingFor('global.open-cheatsheet')).toBe('Ctrl+K Ctrl+S')
-    expect(vm.getBindingFor('page.employees.new')).toBe('Ctrl+N')
+    expect(vm.getBindingFor('global.open-cheatsheet')).toBe('Ctrl+Alt+K')
+    expect(vm.getBindingFor('page.employees.new')).toBe('Alt+N')
   })
 
   it('returns overridden binding after setBinding', () => {
@@ -30,13 +30,13 @@ describe('useShortcutsVm', () => {
     const raw = localStorage.getItem(STORAGE_KEY)
     expect(raw).not.toBeNull()
     const parsed = JSON.parse(raw!)
-    expect(parsed.version).toBe(1)
+    expect(parsed.version).toBe(2)
     expect(parsed.overrides['nav.dashboard']).toBe('Ctrl+Shift+D')
   })
 
   it('loads overrides from localStorage on store init', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      version: 1,
+      version: 2,
       overrides: { 'nav.dashboard': 'Alt+D' }
     }))
 

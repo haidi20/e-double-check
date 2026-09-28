@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --sbm-primary: #00468b;
   --sbm-primary-strong: #003462;
   --sbm-primary-soft: #dbeaff;
@@ -259,6 +259,31 @@ button {
 .app-sidebar a.is-active .app-sidebar__icon {
   background: transparent;
   color: var(--sbm-primary);
+}
+.app-sidebar__shortcut-hint {
+  border: 1px solid var(--sbm-border);
+  border-radius: 4px;
+  color: var(--sbm-neutral);
+  font-size: 0.68rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-left: auto;
+  padding: 3px 5px;
+  white-space: nowrap;
+}
+
+.app-sidebar a:hover .app-sidebar__shortcut-hint,
+.app-sidebar a.is-active .app-sidebar__shortcut-hint {
+  border-color: var(--sbm-primary);
+  color: var(--sbm-primary);
+}
+
+@media (max-width: 1024px) {
+  .app-sidebar__shortcut-hint {
+    display: none;
+  }
 }
 
 .app-main {

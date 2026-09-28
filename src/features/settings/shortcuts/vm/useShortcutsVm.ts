@@ -17,7 +17,13 @@ function loadOverrides(): Record<string, string | null> {
     if (!raw) return {}
     const parsed = JSON.parse(raw) as StoredBindings
     if (parsed.version !== STORAGE_VERSION) return {}
-    return parsed.overrides ?? {}
+    const overrides = parsed.overrides ?? {}
+    for (const [id, binding] of Object.entries(overrides)) {
+      if (binding !== null && isBrowserReservedBinding(binding)) {
+        delete overrides[id]
+      }
+    }
+    return overrides
   } catch {
     return {}
   }
@@ -47,6 +53,28 @@ function normalizeKeybinding(event: KeyboardEvent): string | null {
 
   parts.push(key)
   return parts.join('+')
+}
+
+
+// Browser-reserved shortcuts that JavaScript cannot intercept with preventDefault().
+// Users should not be allowed to assign these bindings to app commands.
+const BROWSER_RESERVED_BINDINGS = new Set([
+  'Ctrl+N',
+  'Ctrl+T',
+  'Ctrl+W',
+  'Ctrl+Shift+N',
+  'Ctrl+Shift+T',
+  'Ctrl+Shift+W',
+  'Ctrl+Shift+Q',
+  'Ctrl+L',
+  'Ctrl+D',
+  'Ctrl+J',
+  'Ctrl+U',
+  'Ctrl+H'
+])
+
+export function isBrowserReservedBinding(binding: string): boolean {
+  return BROWSER_RESERVED_BINDINGS.has(binding)
 }
 
 export const useShortcutsVm = defineStore('shortcutsVm', () => {
@@ -116,6 +144,7 @@ export const useShortcutsVm = defineStore('shortcutsVm', () => {
     const conflict = binding !== null ? detectConflict(binding, commandId) : undefined
     settings.lastConflict = conflict ? conflict.id : null
 
+    if (binding !== null && isBrowserReservedBinding(binding)) return
     if (binding === null || binding === commands.find((c) => c.id === commandId)?.defaultBinding) {
       delete overrides.value[commandId]
     } else {
@@ -162,6 +191,7 @@ export const useShortcutsVm = defineStore('shortcutsVm', () => {
     resetAll,
     setPendingPageAction,
     consumePendingPageAction,
-    buildBindingFromEvent
+    buildBindingFromEvent,
+    isBrowserReservedBinding
   }
 })
