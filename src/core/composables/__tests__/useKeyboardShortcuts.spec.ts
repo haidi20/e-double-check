@@ -50,9 +50,8 @@ describe('useKeyboardShortcuts', () => {
     await router.isReady()
 
     const handler = vi.fn()
-    registerShortcutHandler('nav.dashboard', handler)
-
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+    registerShortcutHandler('nav.dashboard', handler)
     pressKey({ altKey: true, key: '1' })
     await nextTick()
 
@@ -164,9 +163,8 @@ describe('useKeyboardShortcuts', () => {
     await router.isReady()
 
     const handler = vi.fn()
-    registerShortcutHandler('global.open-cheatsheet', handler)
-
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+    registerShortcutHandler('global.open-cheatsheet', handler)
 
     pressKey({ ctrlKey: true, key: 'k' })
     await nextTick()
@@ -186,9 +184,8 @@ describe('useKeyboardShortcuts', () => {
     await router.isReady()
 
     const handler = vi.fn()
-    registerShortcutHandler('page.employees.new', handler)
-
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+    registerShortcutHandler('page.employees.new', handler)
 
     pressKey({ ctrlKey: true, key: 'n' })
     await nextTick()
@@ -260,20 +257,20 @@ describe('useKeyboardShortcuts', () => {
 
     const saveBtn = modal.querySelector('#save-btn') as HTMLButtonElement
     const closeBtn = modal.querySelector('#close-btn') as HTMLButtonElement
-    const saveSpy = vi.fn()
-    const closeSpy = vi.fn()
-    saveBtn.addEventListener('click', saveSpy)
-    closeBtn.addEventListener('click', closeSpy)
+    let saveCalled = false
+    let closeCalled = false
+    saveBtn.addEventListener('click', () => { saveCalled = true })
+    closeBtn.addEventListener('click', () => { closeCalled = true })
 
     saveBtn.focus()
     pressKey({ ctrlKey: true, key: 's' })
     await nextTick()
-    expect(saveSpy).toHaveBeenCalledOnce()
+    expect(saveCalled).toBe(true)
 
     closeBtn.focus()
     pressKey({ key: 'Escape' })
     await nextTick()
-    expect(closeSpy).toHaveBeenCalledOnce()
+    expect(closeCalled).toBe(true)
 
     wrapper.unmount()
   })
@@ -307,9 +304,8 @@ describe('useKeyboardShortcuts', () => {
     await router.isReady()
 
     const handler = vi.fn()
-    registerShortcutHandler('global.open-cheatsheet', handler)
-
     const wrapper = mount(createTestComponent(), { global: { plugins: [router] } })
+    registerShortcutHandler('global.open-cheatsheet', handler)
 
     pressKey({ ctrlKey: true, key: 'k' })
     await nextTick()

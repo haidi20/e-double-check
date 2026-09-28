@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 import { useAppShellVm } from '@/core/vm/useAppShellVm'
 import { useKeyboardShortcuts } from '@/core/composables/useKeyboardShortcuts'
 import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
-import { registerShortcutHandler } from '@/features/settings/shortcuts/vm/shortcutHandlers'
 
 const vm = useAppShellVm()
-const router = useRouter()
 const shortcutsVm = useShortcutsVm()
 
 useKeyboardShortcuts()
@@ -18,34 +15,6 @@ const shortcutHint = (screenId: string) => {
   const binding = shortcutsVm.getBindingFor(cmd.id)
   return binding ? `${cmd.label} (${binding})` : cmd.label
 }
-
-onMounted(() => {
-  // Register global navigation handlers
-  shortcutsVm.commands
-    .filter((cmd) => cmd.scope === 'navigation' && cmd.routePath)
-    .forEach((cmd) => {
-      registerShortcutHandler(cmd.handler, () => {
-        void router.push(cmd.routePath!)
-      })
-    })
-
-  // Register global action handlers
-  registerShortcutHandler('global.open-cheatsheet', () => {
-    void router.push('/shortcuts')
-  })
-  registerShortcutHandler('global.toggle-sidebar', () => {
-    vm.toggleMobileMenu()
-  })
-  registerShortcutHandler('global.focus-search', () => {
-    const searchInput = document.querySelector<HTMLInputElement>(
-      'input[type="search"], input[type="text"][placeholder*="Cari"]'
-    )
-    searchInput?.focus()
-  })
-  registerShortcutHandler('global.logout', () => {
-    void vm.logout()
-  })
-})
 </script>
 
 <template>

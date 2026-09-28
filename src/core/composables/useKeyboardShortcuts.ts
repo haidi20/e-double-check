@@ -1,7 +1,9 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
-import { getShortcutHandler } from '@/features/settings/shortcuts/vm/shortcutHandlers'
+import { getShortcutHandler, registerShortcutHandler } from '@/features/settings/shortcuts/vm/shortcutHandlers'
+import { useAppVm } from '@/core/vm/useAppVm'
+import { useAuthVm } from '@/features/auth/vm/useAuthVm'
 import type { ShortcutCommand } from '@/features/settings/shortcuts/type/shortcutTypes'
 
 function isEditableTarget(target: EventTarget | null): boolean {
@@ -64,6 +66,37 @@ export function useKeyboardShortcuts() {
   const shortcutsVm = useShortcutsVm()
   const route = useRoute()
   const router = useRouter()
+
+  // Register all global handlers immediately (not in onMounted)
+  // so they are available as soon as the engine is active
+  shortcutsVm.commands
+    .filter((cmd) => cmd.scope === 'navigation' && cmd.routePath)
+    .forEach((cmd) => {
+      registerShortcutHandler(cmd.handler, () => {
+        void router.push(cmd.routePath!)
+      })
+    })
+
+  registerShortcutHandler('global.open-cheatsheet', () => {
+    void router.push('/shortcuts')
+  })
+
+  registerShortcutHandler('global.focus-search', () => {
+    const searchInput = document.querySelector<HTMLInputElement>(
+      'input[type="search"], input[type="text"][placeholder*="Cari"]'
+    )
+    searchInput?.focus()
+  })
+
+  registerShortcutHandler('global.toggle-sidebar', () => {
+    const appVm = useAppVm()
+    appVm.toggleMobileMenu()
+  })
+
+  registerShortcutHandler('global.logout', () => {
+    const authVm = useAuthVm()
+    void authVm.logout()
+  })
 
   let pendingChord: string | null = null
   let chordTimeout: ReturnType<typeof setTimeout> | null = null
@@ -161,6 +194,7 @@ export function useKeyboardShortcuts() {
     if (!command) return
 
     event.preventDefault()
+    event.stopImmediatePropagation()
     void executeCommand(command)
   }
 
