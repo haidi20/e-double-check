@@ -1,15 +1,53 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { servicesState } from '@/features/master-data/services/state/servicesState'
+import { useAuthVm } from '@/features/auth/vm/useAuthVm'
 import type { ServiceFormField } from '@/features/master-data/services/type/servicesTypes'
 
+const SERVICES_STORAGE_KEY = 'master.services.v1'
+
 export const useServicesVm = defineStore('servicesVm', () => {
+  const authVm = useAuthVm()
   const view = reactive({
     ...servicesState.view,
     services: [...servicesState.view.services],
     formFields: servicesState.view.formFields.map((field) => ({ ...field }))
   })
   const searchQuery = ref('')
+
+  if (typeof localStorage !== 'undefined') {
+    try {
+      const raw = localStorage.getItem(SERVICES_STORAGE_KEY)
+      const parsed = raw ? JSON.parse(raw) : null
+
+      if (Array.isArray(parsed) && parsed.length) {
+        view.services = parsed
+      }
+    } catch {
+    }
+  }
+
+  watch(
+    () => view.services,
+    (services) => {
+      if (typeof localStorage === 'undefined') {
+        return
+      }
+
+      localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(JSON.parse(JSON.stringify(services))))
+    },
+    { deep: true }
+  )
+
+  const ensureMasterEditor = () => {
+    if (authVm.selectedRole !== 'employee') {
+      return true
+    }
+
+    view.formError = 'Hanya admin yang dapat mengubah data master.'
+    view.isFormModalOpen = false
+    return false
+  }
 
   const serviceRows = computed(() => {
     const query = searchQuery.value.trim().toLowerCase()
@@ -64,6 +102,10 @@ export const useServicesVm = defineStore('servicesVm', () => {
   }
 
   const saveFormModal = () => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const code = view.formFields.find((field) => field.id === 'code')?.value.trim().toUpperCase() ?? ''
     const name = view.formFields.find((field) => field.id === 'name')?.value.trim() ?? ''
     const description = view.formFields.find((field) => field.id === 'description')?.value.trim() ?? ''
@@ -110,6 +152,10 @@ export const useServicesVm = defineStore('servicesVm', () => {
   }
 
   const deleteService = (serviceId: string) => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const index = view.services.findIndex((row) => row.id === serviceId)
 
     if (index >= 0) {

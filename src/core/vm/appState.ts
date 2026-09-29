@@ -37,6 +37,15 @@ export const appState: AppState = {
       component: lazyView(() => import('@/features/checklist/screen/ChecklistQuestionsScreen.vue'))
     },
     {
+      id: 'checklist-answer-types',
+      label: 'Tipe Jawaban',
+      shortLabel: 'Tipe Jawaban',
+      section: 'Operasional',
+      routePath: '/checklist-tipe-jawaban',
+      icon: 'M4 6h16M4 12h10M4 18h7',
+      component: lazyView(() => import('@/features/checklist/screen/ChecklistAnswerTypesScreen.vue'))
+    },
+    {
       id: 'orders',
       label: 'Order Pesanan',
       section: 'Operasional',

@@ -6,6 +6,15 @@ export interface OutletRow {
   status: string
 }
 
+export interface CaptainAssignment {
+  id: string
+  outletId: string
+  employeeId: string
+  employeeName: string
+  assignedAt: string
+  releasedAt?: string
+}
+
 export type OutletFormFieldType = 'text' | 'select'
 
 export interface OutletFormField {
@@ -24,6 +33,7 @@ export interface OutletsView {
   primaryActionLabel: string
   searchPlaceholder: string
   outlets: OutletRow[]
+  captainAssignments: CaptainAssignment[]
   formTitle: string
   formSubtitle: string
   formSubmitLabel: string

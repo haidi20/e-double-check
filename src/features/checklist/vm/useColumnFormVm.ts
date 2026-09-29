@@ -2,11 +2,13 @@ import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { columnFormState } from '@/features/checklist/state/columnFormState'
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
+import { useChecklistAnswerTypeVm } from '@/features/checklist/vm/useChecklistAnswerTypeVm'
 import type { ChecklistColumn, ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistColumnType } from '@/features/checklist/type/checklistTypes'
 
 export const useColumnFormVm = defineStore('columnFormVm', () => {
   const form = reactive({ ...columnFormState })
   const questionsVm = useChecklistQuestionsVm()
+  const answerTypeVm = useChecklistAnswerTypeVm()
 
   const category = computed(() =>
     questionsVm.view.categories.find(
@@ -27,12 +29,31 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
     text: 'Teks',
     number: 'Angka',
     boolean: 'Ya / Tidak',
-    time: 'Waktu'
+    time: 'Waktu',
+    select: 'Pilihan'
   }
 
   const columnModeLabels: Record<ChecklistColumnMode, string> = {
     input: 'Admin',
     'read-only': 'Karyawan'
+  }
+
+  const activeAnswerTypes = computed(() => answerTypeVm.answerTypeOptions)
+
+  const selectedAnswerType = computed(() =>
+    answerTypeVm.view.answerTypes.find((item) => item.id === form.answerTypeId) ?? null
+  )
+
+  const resolveAnswerTypeId = (column: ChecklistColumn | null) => {
+    if (column?.answerTypeId) {
+      return column.answerTypeId
+    }
+
+    const kindMatch = answerTypeVm.view.answerTypes.find(
+      (item) => !item.isArchived && item.kind === column?.type
+    )
+
+    return kindMatch?.id ?? activeAnswerTypes.value[0]?.value ?? 'at-text'
   }
 
   const defaultGridSpan = (column: ChecklistColumn | null): ChecklistColumnGridSpan => {
@@ -57,12 +78,17 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
 
   const reset = () => {
     form.label = editingColumn.value?.label ?? columnFormState.label
-    form.type = editingColumn.value?.type ?? columnFormState.type
     form.mode = editingColumn.value?.mode ?? columnFormState.mode
     form.required = editingColumn.value?.required ?? columnFormState.required
     form.gridSpan = editingColumn.value?.gridSpan ?? defaultGridSpan(editingColumn.value)
     form.boldValue = editingColumn.value?.boldValue ?? columnFormState.boldValue
     form.error = columnFormState.error
+    form.answerTypeId = resolveAnswerTypeId(editingColumn.value)
+    form.type = selectedAnswerType.value?.kind ?? editingColumn.value?.type ?? columnFormState.type
+  }
+
+  const syncSelectedAnswerType = () => {
+    form.type = selectedAnswerType.value?.kind ?? form.type
   }
 
   const open = (categoryId: string, columnId?: string) => {
@@ -76,13 +102,16 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
   }
 
   const submit = () => {
+    const answerType = selectedAnswerType.value
     const isSuccess = questionsVm.addColumn({
       label: form.label,
-      type: form.type,
+      type: answerType?.kind ?? form.type,
       mode: form.mode,
       required: form.required,
       gridSpan: form.gridSpan,
-      boldValue: form.boldValue
+      boldValue: form.boldValue,
+      answerTypeId: form.answerTypeId,
+      options: answerType?.kind === 'select' ? answerType.options ?? [] : undefined
     })
 
     if (isSuccess) {
@@ -108,6 +137,9 @@ export const useColumnFormVm = defineStore('columnFormVm', () => {
     error,
     columnTypeLabels,
     columnModeLabels,
+    activeAnswerTypes,
+    selectedAnswerType,
+    syncSelectedAnswerType,
     formatColumnType,
     open,
     close,

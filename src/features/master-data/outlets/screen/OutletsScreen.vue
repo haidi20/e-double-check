@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import CaptainAssignmentModal from '@/features/master-data/outlets/screen/CaptainAssignmentModal.vue'
 import OutletFormModal from '@/features/master-data/outlets/screen/OutletFormModal.vue'
 import { useOutletsVm } from '@/features/master-data/outlets/vm/useOutletsVm'
+import { useCaptainAssignmentVm } from '@/features/master-data/outlets/vm/useCaptainAssignmentVm'
 import { usePageShortcuts } from '@/core/composables/usePageShortcuts'
 import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
 
 const vm = useOutletsVm()
+const captainVm = useCaptainAssignmentVm()
 const shortcutsVm = useShortcutsVm()
 
 usePageShortcuts([
@@ -44,6 +47,7 @@ usePageShortcuts([
           <span>Kode</span>
           <span>Nama</span>
           <span>Penanggung jawab</span>
+          <span>Kapten</span>
           <span>Status</span>
           <span>Aksi</span>
         </div>
@@ -51,9 +55,11 @@ usePageShortcuts([
           <strong>{{ row.code }}</strong>
           <span>{{ row.name }}</span>
           <span>{{ row.owner }}</span>
+          <span>{{ vm.activeCaptainName(row.id) }}</span>
           <mark>{{ row.status }}</mark>
           <span class="table-actions">
             <button type="button" class="ghost-button" @click="vm.openEditModal(row.id)">Ubah</button>
+            <button type="button" class="ghost-button" @click="captainVm.open(row.id)">Kapten</button>
             <button type="button" class="ghost-button" @click="vm.deleteOutlet(row.id)">Hapus</button>
           </span>
         </div>
@@ -63,5 +69,6 @@ usePageShortcuts([
     </section>
 
     <OutletFormModal />
+    <CaptainAssignmentModal />
   </main>
 </template>

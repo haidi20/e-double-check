@@ -1,8 +1,11 @@
 import { registerStateHmr } from '@/core/vm/registerStateHmr'
 import { defineStore } from 'pinia'
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { checklistQuestionsState } from '@/features/checklist/state/checklistQuestionsState'
+import { localChecklistRepository } from '@/features/checklist/repository/localChecklistRepository'
+import { useAuthVm } from '@/features/auth/vm/useAuthVm'
+import { useServicesVm } from '@/features/master-data/services/vm/useServicesVm'
 import type { ChecklistCategory, ChecklistColumn, ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistQuestion, ChecklistQuestionValue } from '@/features/checklist/type/checklistTypes'
 
 const defaultCategoryIcon = 'M4 6h16v4H4zM4 12h16v4H4zM4 18h16v2H4z'
@@ -15,6 +18,8 @@ const categoryIconMap: Record<string, string> = {
   'insiden-pesanan': 'M12 3 22 21H2L12 3Zm0 6v6m0 4v.01',
   'penutupan-shift': 'M12 3 20 7v5c0 5-3.4 8.1-8 10-4.6-1.9-8-5-8-10V7l8-4Zm-3 9 2 2 4-5'
 }
+
+const toPlainRecords = <T>(records: T[]): T[] => JSON.parse(JSON.stringify(records)) as T[]
 
 export interface ChecklistCategoryCardItem {
   id: string
@@ -38,48 +43,141 @@ export interface ChecklistQuestionRow {
 
 export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () => {
   const router = useRouter()
+  const authVm = useAuthVm()
+  const servicesVm = useServicesVm()
   const view = reactive({
     ...checklistQuestionsState,
     modal: { ...checklistQuestionsState.modal },
-    columnModal: { ...checklistQuestionsState.columnModal, editingColumnId: null as string | null }
+    columnModal: { ...checklistQuestionsState.columnModal, editingColumnId: null as string | null },
+    categoryModal: { ...checklistQuestionsState.categoryModal }
   })
   registerStateHmr(view, 'checklistQuestionsState')
 
-  const categoryCards = computed<ChecklistCategoryCardItem[]>(() =>
-    view.categories.map((category: ChecklistCategory) => ({
-      id: category.id,
-      name: category.name,
-      description: category.description,
-      questionCount: questionRowsByCategory.value[category.id]?.length ?? 0,
-      icon: categoryIconMap[category.id] ?? defaultCategoryIcon,
-      isVisible: category.isVisible,
-      columns: category.columns,
-      displayColumns: category.columns.filter(
-        (column) => column.label.trim().toLowerCase() !== 'no'
-      )
-    }))
+  const savedCategories = localChecklistRepository.loadCategories()
+
+  if (savedCategories) {
+    view.categories = savedCategories
+  }
+
+  const savedQuestions = localChecklistRepository.loadQuestions()
+
+  if (savedQuestions) {
+    view.questions = savedQuestions
+  }
+
+  const resolveServiceId = (serviceLabel: string) => {
+    const normalized = serviceLabel.trim().toLowerCase()
+    const match = servicesVm.view.services.find((service) =>
+      service.name.toLowerCase() === normalized ||
+      service.code.toLowerCase() === normalized
+    )
+
+    return match?.id ?? servicesVm.view.services[0]?.id ?? 'service-1'
+  }
+
+  view.questions.forEach((question) => {
+    if (!question.serviceId) {
+      question.serviceId = resolveServiceId(question.service)
+    }
+  })
+
+  watch(
+    () => [view.categories, view.questions],
+    () => {
+      localChecklistRepository.saveCategories(toPlainRecords(view.categories))
+      localChecklistRepository.saveQuestions(toPlainRecords(view.questions))
+    },
+    { deep: true }
   )
+
+  const isMasterEditor = computed(() => authVm.selectedRole !== 'employee')
+
+  const ensureMasterEditor = () => {
+    if (isMasterEditor.value) {
+      return true
+    }
+
+    view.categoryModal.actionError = 'Hanya admin yang dapat mengubah data master.'
+    return false
+  }
+
+  const mapCategoryCard = (category: ChecklistCategory): ChecklistCategoryCardItem => ({
+    id: category.id,
+    name: category.name,
+    description: category.description,
+    questionCount: questionRowsByCategory.value[category.id]?.length ?? 0,
+    icon: categoryIconMap[category.id] ?? defaultCategoryIcon,
+    isVisible: category.isVisible,
+    columns: category.columns,
+    displayColumns: category.columns.filter(
+      (column) => column.label.trim().toLowerCase() !== 'no'
+    )
+  })
+
+  const categoryCards = computed<ChecklistCategoryCardItem[]>(() =>
+    view.categories
+      .filter((category) => !category.isArchived)
+      .map((category: ChecklistCategory) => mapCategoryCard(category))
+  )
+
+  const archivedCategoryCards = computed<ChecklistCategoryCardItem[]>(() =>
+    view.categories
+      .filter((category) => category.isArchived)
+      .map((category: ChecklistCategory) => mapCategoryCard(category))
+  )
+
+  const serviceNameOf = (question: ChecklistQuestion) => {
+    const service = servicesVm.view.services.find((item) => item.id === question.serviceId)
+
+    return service?.name ?? question.service
+  }
+
+  const serviceAbbreviationOf = (question: ChecklistQuestion) => {
+    const service = servicesVm.view.services.find((item) => item.id === question.serviceId)
+    const label = service?.code ?? serviceNameOf(question)
+
+    return label.slice(0, 2).toUpperCase()
+  }
+
+  const mapQuestionRows = (categoryId: string, archived: boolean): ChecklistQuestionRow[] => {
+    let number = 0
+
+    return view.questions
+      .filter((question) => question.categoryId === categoryId && question.isArchived === archived)
+      .map((question) => {
+        number += 1
+
+        return {
+          number,
+          id: question.id,
+          name: question.name,
+          service: serviceNameOf(question),
+          serviceAbbreviation: serviceAbbreviationOf(question),
+          badge: question.requiresDoubleCheck
+            ? 'Cek ganda'
+            : question.requiresFinalChecker
+              ? 'Pemeriksa akhir'
+              : question.requiresCheckTime
+                ? 'Jam cek'
+                : null
+        }
+      })
+  }
 
   const questionRowsByCategory = computed<Record<string, ChecklistQuestionRow[]>>(() =>
     Object.fromEntries(
       view.categories.map((category: ChecklistCategory) => [
         category.id,
-        view.questions
-          .filter((question) => question.categoryId === category.id)
-          .map((question, index) => ({
-            number: index + 1,
-            id: question.id,
-            name: question.name,
-            service: question.service,
-            serviceAbbreviation: question.service.slice(0, 2).toUpperCase(),
-            badge: question.requiresDoubleCheck
-              ? 'Cek ganda'
-              : question.requiresFinalChecker
-                ? 'Pemeriksa akhir'
-                : question.requiresCheckTime
-                  ? 'Jam cek'
-                  : null
-          }))
+        mapQuestionRows(category.id, false)
+      ])
+    )
+  )
+
+  const archivedQuestionRowsByCategory = computed<Record<string, ChecklistQuestionRow[]>>(() =>
+    Object.fromEntries(
+      view.categories.map((category: ChecklistCategory) => [
+        category.id,
+        mapQuestionRows(category.id, true)
       ])
     )
   )
@@ -89,11 +187,174 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   }
 
   const toggleCategoryVisibility = (categoryId: string) => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const category = view.categories.find((item) => item.id === categoryId)
 
     if (category) {
       category.isVisible = !category.isVisible
     }
+  }
+
+  const openCategoryModal = (categoryId?: string) => {
+    view.categoryModal.editingCategoryId = categoryId ?? null
+    view.categoryModal.categoryFormError = ''
+    view.categoryModal.isCategoryModalOpen = true
+  }
+
+  const closeCategoryModal = () => {
+    view.categoryModal.isCategoryModalOpen = false
+    view.categoryModal.editingCategoryId = null
+    view.categoryModal.categoryFormError = ''
+  }
+
+  const addCategory = (input: { name: string; description: string }) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const name = input.name.trim()
+
+    if (!name) {
+      view.categoryModal.categoryFormError = 'Nama kategori wajib diisi.'
+      return false
+    }
+
+    const isDuplicate = view.categories.some(
+      (category) => category.name.trim().toLowerCase() === name.toLowerCase()
+    )
+
+    if (isDuplicate) {
+      view.categoryModal.categoryFormError = 'Nama kategori sudah digunakan.'
+      return false
+    }
+
+    view.categories.push({
+      id: `kategori-${Date.now()}`,
+      name,
+      description: input.description.trim(),
+      questionCount: 0,
+      isVisible: true,
+      columns: []
+    })
+
+    view.categoryModal.isCategoryModalOpen = false
+    view.categoryModal.editingCategoryId = null
+    view.categoryModal.categoryFormError = ''
+    view.categoryModal.actionError = ''
+    return true
+  }
+
+  const updateCategory = (categoryId: string, input: { name: string; description: string }) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const category = view.categories.find((item) => item.id === categoryId)
+
+    if (!category) {
+      return false
+    }
+
+    const name = input.name.trim()
+
+    if (!name) {
+      view.categoryModal.categoryFormError = 'Nama kategori wajib diisi.'
+      return false
+    }
+
+    const isDuplicate = view.categories.some(
+      (item) => item.id !== categoryId && item.name.trim().toLowerCase() === name.toLowerCase()
+    )
+
+    if (isDuplicate) {
+      view.categoryModal.categoryFormError = 'Nama kategori sudah digunakan.'
+      return false
+    }
+
+    category.name = name
+    category.description = input.description.trim()
+    view.categoryModal.isCategoryModalOpen = false
+    view.categoryModal.editingCategoryId = null
+    view.categoryModal.categoryFormError = ''
+    view.categoryModal.actionError = ''
+    return true
+  }
+
+  const moveCategory = (categoryId: string, direction: 'up' | 'down') => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const index = view.categories.findIndex((item) => item.id === categoryId)
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
+
+    if (index < 0 || targetIndex < 0 || targetIndex >= view.categories.length) {
+      return false
+    }
+
+    const [category] = view.categories.splice(index, 1)
+    view.categories.splice(targetIndex, 0, category)
+    view.categoryModal.actionError = ''
+    return true
+  }
+
+  const archiveCategory = (categoryId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const category = view.categories.find((item) => item.id === categoryId)
+
+    if (!category) {
+      return false
+    }
+
+    category.isArchived = true
+    view.categoryModal.actionError = ''
+    return true
+  }
+
+  const restoreCategory = (categoryId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const category = view.categories.find((item) => item.id === categoryId)
+
+    if (!category) {
+      return false
+    }
+
+    category.isArchived = false
+    view.categoryModal.actionError = ''
+    return true
+  }
+
+  const deleteCategory = (categoryId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const index = view.categories.findIndex((item) => item.id === categoryId)
+
+    if (index < 0) {
+      return false
+    }
+
+    const hasQuestions = view.questions.some((question) => question.categoryId === categoryId)
+
+    if (hasQuestions) {
+      view.categoryModal.actionError =
+        'Kategori masih memiliki pertanyaan. Arsipkan kategori untuk menjaga riwayat.'
+      return false
+    }
+
+    view.categories.splice(index, 1)
+    view.categoryModal.actionError = ''
+    return true
   }
 
   const openQuestionModal = (categoryId: string) => {
@@ -113,6 +374,10 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   }
 
   const addQuestion = (input: { values: Record<string, ChecklistQuestionValue> }) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
     if (!view.modal.questionModalCategoryId) {
       return false
     }
@@ -159,12 +424,13 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
       )
 
     const name = mainTextColumn ? valueOfColumn((column) => column.id === mainTextColumn.id) : ''
-    const service = valueOfColumn((column) => column.label.toLowerCase().includes('layanan'))
+    const serviceId = valueOfColumn((column) => column.label.toLowerCase().includes('layanan'))
+    const service = servicesVm.view.services.find((item) => item.id === serviceId)?.name ?? ''
     const executor = valueOfColumn((column) => column.label.toLowerCase().includes('pelaksana'))
     const controller = valueOfColumn((column) => column.label.toLowerCase().includes('kontrol'))
     const checkTime = valueOfColumn((column) => column.label.toLowerCase().includes('jam cek'))
 
-    if (!name || !service) {
+    if (!name || !serviceId) {
       view.modal.questionFormError = 'Kolom pertanyaan dan layanan wajib diisi.'
       return false
     }
@@ -180,15 +446,14 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
       categoryId,
       name,
       service,
+      serviceId,
       values: input.values,
       executor: executor || undefined,
       controller: controller || undefined,
       requiresCheckTime: checkTime ? true : undefined
     })
 
-    if (category) {
-      category.questionCount += 1
-    }
+    category.questionCount += 1
 
     view.modal.isQuestionModalOpen = false
     view.modal.questionFormError = ''
@@ -196,6 +461,10 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   }
 
   const updateQuestion = (questionId: string, input: { values: Record<string, ChecklistQuestionValue> }) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
     const question = view.questions.find((item) => item.id === questionId)
 
     if (!question) {
@@ -243,18 +512,20 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
       )
 
     const name = mainTextColumn ? valueOfColumn((column) => column.id === mainTextColumn.id) : ''
-    const service = valueOfColumn((column) => column.label.toLowerCase().includes('layanan'))
+    const serviceId = valueOfColumn((column) => column.label.toLowerCase().includes('layanan'))
+    const service = servicesVm.view.services.find((item) => item.id === serviceId)?.name ?? ''
     const executor = valueOfColumn((column) => column.label.toLowerCase().includes('pelaksana'))
     const controller = valueOfColumn((column) => column.label.toLowerCase().includes('kontrol'))
     const checkTime = valueOfColumn((column) => column.label.toLowerCase().includes('jam cek'))
 
-    if (!name || !service) {
+    if (!name || !serviceId) {
       view.modal.questionFormError = 'Kolom pertanyaan dan layanan wajib diisi.'
       return false
     }
 
     question.name = name
     question.service = service
+    question.serviceId = serviceId
     question.values = input.values
     question.executor = executor || undefined
     question.controller = controller || undefined
@@ -264,6 +535,10 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   }
 
   const removeQuestion = (questionId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
     const index = view.questions.findIndex((item) => item.id === questionId)
 
     if (index < 0) {
@@ -285,7 +560,72 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     return true
   }
 
+  const moveQuestion = (questionId: string, direction: 'up' | 'down') => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const question = view.questions.find((item) => item.id === questionId)
+
+    if (!question) {
+      return false
+    }
+
+    const categoryIndexes = view.questions
+      .map((item, index) =>
+        item.categoryId === question.categoryId && !item.isArchived ? index : -1
+      )
+      .filter((index) => index >= 0)
+    const position = categoryIndexes.indexOf(view.questions.indexOf(question))
+    const targetPosition = direction === 'up' ? position - 1 : position + 1
+
+    if (position < 0 || targetPosition < 0 || targetPosition >= categoryIndexes.length) {
+      return false
+    }
+
+    const currentIndex = view.questions.indexOf(question)
+    const targetIndex = categoryIndexes[targetPosition]
+
+    view.questions.splice(currentIndex, 1)
+    view.questions.splice(targetIndex > currentIndex ? targetIndex - 1 : targetIndex, 0, question)
+    return true
+  }
+
+  const archiveQuestion = (questionId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const question = view.questions.find((item) => item.id === questionId)
+
+    if (!question) {
+      return false
+    }
+
+    question.isArchived = true
+    return true
+  }
+
+  const restoreQuestion = (questionId: string) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
+    const question = view.questions.find((item) => item.id === questionId)
+
+    if (!question) {
+      return false
+    }
+
+    question.isArchived = false
+    return true
+  }
+
   const openColumnModal = (categoryId: string, columnId?: string) => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     view.columnModal.columnModalCategoryId = categoryId
     view.columnModal.editingColumnId = columnId ?? null
     view.columnModal.isColumnModalOpen = true
@@ -298,7 +638,20 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
     view.columnModal.columnFormError = ''
   }
 
-  const addColumn = (input: { label: string; type: ChecklistColumn['type']; mode: ChecklistColumnMode; required: boolean; gridSpan: ChecklistColumnGridSpan; boldValue: boolean }) => {
+  const addColumn = (input: {
+    label: string
+    type: ChecklistColumn['type']
+    mode: ChecklistColumnMode
+    required: boolean
+    gridSpan: ChecklistColumnGridSpan
+    boldValue: boolean
+    answerTypeId?: string
+    options?: string[]
+  }) => {
+    if (!ensureMasterEditor()) {
+      return false
+    }
+
     if (!view.columnModal.columnModalCategoryId) {
       return false
     }
@@ -341,6 +694,8 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         existing.required = input.required
         existing.gridSpan = input.gridSpan
         existing.boldValue = input.boldValue
+        existing.answerTypeId = input.answerTypeId
+        existing.options = input.options?.length ? input.options : undefined
       }
     } else {
       const nextNumber = category.columns.reduce((max, column) => {
@@ -356,7 +711,9 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
         mode: input.mode,
         required: input.required,
         gridSpan: input.gridSpan,
-        boldValue: input.boldValue
+        boldValue: input.boldValue,
+        answerTypeId: input.answerTypeId,
+        options: input.options?.length ? input.options : undefined
       })
     }
 
@@ -367,6 +724,10 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   }
 
   const removeColumn = (categoryId: string, columnId: string) => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const category = view.categories.find((item) => item.id === categoryId)
 
     if (!category) {
@@ -383,16 +744,31 @@ export const useChecklistQuestionsVm = defineStore('checklistQuestionsVm', () =>
   return {
     view,
     columnModal: view.columnModal,
+    categoryModal: view.categoryModal,
+    isMasterEditor,
     categoryCards,
+    archivedCategoryCards,
     questionRowsByCategory,
+    archivedQuestionRowsByCategory,
     openCategory,
     toggleCategoryVisibility,
+    openCategoryModal,
+    closeCategoryModal,
+    addCategory,
+    updateCategory,
+    moveCategory,
+    archiveCategory,
+    restoreCategory,
+    deleteCategory,
     openQuestionModal,
     setQuestionModalCategory,
     closeQuestionModal,
     addQuestion,
     updateQuestion,
     removeQuestion,
+    moveQuestion,
+    archiveQuestion,
+    restoreQuestion,
     openColumnModal,
     closeColumnModal,
     addColumn,

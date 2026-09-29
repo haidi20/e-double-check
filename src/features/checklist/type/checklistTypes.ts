@@ -1,4 +1,4 @@
-export type ChecklistColumnType = 'text' | 'number' | 'boolean' | 'time'
+export type ChecklistColumnType = 'text' | 'number' | 'boolean' | 'time' | 'select'
 export type ChecklistColumnMode = 'input' | 'read-only'
 export type ChecklistColumnGridSpan = 6 | 12
 export type ChecklistQuestionValue = string | number | boolean
@@ -11,6 +11,8 @@ export interface ChecklistColumn {
   required: boolean
   gridSpan?: ChecklistColumnGridSpan
   boldValue?: boolean
+  options?: string[]
+  answerTypeId?: string
 }
 
 export interface ChecklistCategory {
@@ -19,6 +21,7 @@ export interface ChecklistCategory {
   description: string
   questionCount: number
   isVisible: boolean
+  isArchived?: boolean
   columns: ChecklistColumn[]
 }
 
@@ -27,12 +30,14 @@ export interface ChecklistQuestion {
   categoryId: string
   name: string
   service: string
+  serviceId?: string
   values?: Partial<Record<string, ChecklistQuestionValue>>
   executor?: string
   controller?: string
   requiresCheckTime?: boolean
   requiresDoubleCheck?: boolean
   requiresFinalChecker?: boolean
+  isArchived?: boolean
 }
 
 export interface ChecklistQuestionModalState {
@@ -68,4 +73,32 @@ export interface ChecklistQuestionsState {
   questions: ChecklistQuestion[]
   modal: ChecklistQuestionModalState
   columnModal: ChecklistColumnModalState
+  categoryModal: ChecklistCategoryModalState
+}
+
+export interface ChecklistCategoryModalState {
+  isCategoryModalOpen: boolean
+  editingCategoryId: string | null
+  categoryFormError: string
+  actionError: string
+}
+
+export interface ChecklistAnswerType {
+  id: string
+  label: string
+  kind: ChecklistColumnType
+  options?: string[]
+  isSystem: boolean
+  isArchived?: boolean
+}
+
+export interface ChecklistAnswerTypeModalState {
+  isOpen: boolean
+  editingAnswerTypeId: string | null
+  formError: string
+}
+
+export interface ChecklistAnswerTypesState {
+  answerTypes: ChecklistAnswerType[]
+  modal: ChecklistAnswerTypeModalState
 }

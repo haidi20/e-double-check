@@ -617,23 +617,23 @@ GET /checklist-reports
 
 ### 3.3 Kriteria Penerimaan
 
-- [ ] Data master awal berisi enam kategori yang dapat diedit, tata letak kolom yang dapat diedit dari PDF, dan 48 pertanyaan; tidak ada nama kategori, jumlah, huruf, kolom, atau posisi yang di-hard-code sebagai aturan sistem.
-- [ ] Pengguna dapat melakukan CRUD kolom kategori dan mengonfigurasi tipe data, mode input/read-only, status wajib, urutan, dan opsi setiap kolom.
+- [x] Data master awal berisi enam kategori yang dapat diedit, tata letak kolom yang dapat diedit dari PDF, dan 48 pertanyaan; tidak ada nama kategori, jumlah, huruf, kolom, atau posisi yang di-hard-code sebagai aturan sistem.
+- [x] Pengguna dapat melakukan CRUD kolom kategori dan mengonfigurasi tipe data, mode input/read-only, status wajib, urutan, dan opsi setiap kolom.
 - [ ] Kolom read-only tidak dapat diedit di sesi; kolom input memvalidasi nilai berdasarkan tipe data yang dikonfigurasi.
-- [ ] Master layanan dikelola melalui CRUD oleh pengguna dan diinisialisasi dengan `Semua`, `DI`, dan `TA`; kategori/pertanyaan mereferensikan layanan berdasarkan ID.
-- [ ] Pengguna dapat membuat, mengedit, mengurutkan ulang, mengarsipkan, dan menghapus kategori sesuai penjagaan referensi.
-- [ ] Pengguna dapat membuat, mengedit, mengurutkan ulang, mengarsipkan, dan menghapus pertanyaan sesuai penjagaan riwayat sesi.
-- [ ] Tipe jawaban sistem tersedia; tipe jawaban yang dikelola pengguna mengikuti penjagaan tipe sistem.
-- [ ] Form pertanyaan memilih tipe jawaban dari data master, bukan dari daftar UI yang di-hard-code.
-- [ ] Layar hanya memanggil view model; view model memiliki logika bisnis dan menggunakan repository untuk akses data.
-- [ ] Setiap view model diimplementasikan sebagai Pinia store sendiri menggunakan `defineStore`.
-- [ ] Setiap screen memiliki VM screen tersendiri; tidak ada dua screen yang berbagi file VM.
-- [ ] Setiap form/modal memiliki VM form tersendiri; tidak ada dua form/modal yang berbagi file VM.
-- [ ] Screen VM hanya mengelola state tampilan dan orkestrasi screen; form VM hanya mengelola field, validasi, dan submit form.
+- [x] Master layanan dikelola melalui CRUD oleh pengguna dan diinisialisasi dengan `Semua`, `DI`, dan `TA`; kategori/pertanyaan mereferensikan layanan berdasarkan ID.
+- [x] Pengguna dapat membuat, mengedit, mengurutkan ulang, mengarsipkan, dan menghapus kategori sesuai penjagaan referensi.
+- [x] Pengguna dapat membuat, mengedit, mengurutkan ulang, mengarsipkan, dan menghapus pertanyaan sesuai penjagaan riwayat sesi.
+- [x] Tipe jawaban sistem tersedia; tipe jawaban yang dikelola pengguna mengikuti penjagaan tipe sistem.
+- [x] Form pertanyaan memilih tipe jawaban dari data master, bukan dari daftar UI yang di-hard-code.
+- [x] Layar hanya memanggil view model; view model memiliki logika bisnis dan menggunakan repository untuk akses data.
+- [x] Setiap view model diimplementasikan sebagai Pinia store sendiri menggunakan `defineStore`.
+- [x] Setiap screen memiliki VM screen tersendiri; tidak ada dua screen yang berbagi file VM.
+- [x] Setiap form/modal memiliki VM form tersendiri; tidak ada dua form/modal yang berbagi file VM.
+- [x] Screen VM hanya mengelola state tampilan dan orkestrasi screen; form VM hanya mengelola field, validasi, dan submit form.
 - [ ] VM domain/shared hanya mengelola operasi bisnis bersama dan akses repository.
-- [ ] File state hanya berisi state awal dan tidak berisi logika bisnis atau persistensi.
-- [ ] Setiap state dan setiap view model didefinisikan dalam file terpisah.
-- [ ] Sumber data lokal dan remote dapat dipilih di balik batasan repository.
+- [x] File state hanya berisi state awal dan tidak berisi logika bisnis atau persistensi.
+- [x] Setiap state dan setiap view model didefinisikan dalam file terpisah.
+- [x] Sumber data lokal dan remote dapat dipilih di balik batasan repository.
 - [ ] Sesi baru dibangun dari data master aktif dan mempertahankan snapshot pertanyaan yang tidak dapat diubah.
 - [ ] Sesi terkait dengan outlet, tanggal, shift, dan kapten; hanya satu sesi terbuka untuk kombinasi tersebut.
 - [ ] Cek 1 dan Cek 2 TA memerlukan identitas aktor yang berbeda.
@@ -645,14 +645,14 @@ GET /checklist-reports
 - [ ] Laporan komplain dapat difilter per outlet dan periode ketika Fase 5 selesai.
 - [ ] Master outlet dikelola melalui CRUD dengan nama unik dan status aktif.
 - [ ] Master pegawai dikelola melalui CRUD dengan nama dan posisi.
-- [ ] Satu outlet maksimal satu kapten aktif; penugasan ulang menutup penugasan sebelumnya.
-- [ ] Riwayat penugasan kapten terjaga dan dapat dicari per outlet.
+- [x] Satu outlet maksimal satu kapten aktif; penugasan ulang menutup penugasan sebelumnya.
+- [x] Riwayat penugasan kapten terjaga dan dapat dicari per outlet.
 - [ ] Sesi checklist mencatat identitas kapten saat sesi dimulai.
-- [ ] Layar login menampilkan pemilih peran dengan opsi `Admin` dan `Pegawai` serta tombol `Masuk`.
-- [ ] Pengguna admin melihat semua entri navigasi sidebar setelah login.
-- [ ] Pengguna pegawai hanya melihat `/checklist` di sidebar setelah login.
-- [ ] View model menolak mutasi data master dari peran non-admin.
-- [ ] `npm run typecheck` completes without errors.
+- [x] Layar login menampilkan pemilih peran dengan opsi `Admin` dan `Pegawai` serta tombol `Masuk`.
+- [x] Pengguna admin melihat semua entri navigasi sidebar setelah login.
+- [x] Pengguna pegawai hanya melihat `/checklist` di sidebar setelah login.
+- [x] View model menolak mutasi data master dari peran non-admin.
+- [x] `npm run typecheck` completes without errors.
 
 ### Status Implementasi Data Seed
 
@@ -690,6 +690,20 @@ Data seed di `src/features/checklist/state/checklistQuestionsState.ts` sudah dip
 - Grid memakai `repeat(2, minmax(0, 1fr))`, sehingga tidak mungkin ada lebih dari dua input dalam satu baris.
 - Full grid memakai `grid-column: 1 / -1`; setengah grid memakai satu kolom grid.
 - Pada viewport di bawah `768px`, semua kolom dipaksa full agar form tetap nyaman diisi di ponsel.
+
+### Status Implementasi Master, Repository, dan Peran (Terbaru)
+
+Implementasi saat ini sudah mencakup:
+
+- **CRUD kategori penuh** pada `/checklist`: buat, ubah nama/deskripsi, urutkan naik/turun, arsipkan, pulihkan, dan hapus. Hapus diblokir ketika kategori masih memiliki pertanyaan (pesan arsipkan muncul di layar).
+- **Urut ulang dan arsip pertanyaan** pada detail kategori `/checklist/:categoryId`: naik/turun, arsip, pulihkan, dan hapus dari arsip.
+- **Tipe jawaban** pada `/checklist-tipe-jawaban`: tipe sistem (Teks, Angka, Ya/Tidak, Waktu) terlindungi; admin dapat membuat tipe pilihan kustom dengan opsi, mengubah, mengarsipkan, dan menghapus. Hapus diblokir jika tipe masih dipakai kolom. Form kolom kini memilih tipe jawaban dari master ini.
+- **Layanan berbasis ID**: pertanyaan menyimpan `serviceId` yang merujuk master layanan (`Semua`, `DI`, `TA` ditampilkan dari master). Data lama tanpa `serviceId` dimigrasikan otomatis saat load berdasarkan nama/kode layanan.
+- **Repository layer**: kontrak `ChecklistRepository` (`src/features/checklist/repository/checklistRepository.ts`) dengan adapter `localChecklistRepository` (localStorage versi `checklist.categories.v1`, `checklist.questions.v1`, `checklist.answerTypes.v1`) dan stub `remoteChecklistRepository` untuk integrasi API berikutnya. Master layanan dan warung (termasuk penugasan kapten) juga dipersistenkan di localStorage.
+- **Penugasan kapten outlet**: modal kelola kapten pada master warung mendukung penugasan satu kapten aktif per outlet, penutupan otomatis penugasan sebelumnya, pengakhiran manual, dan riwayat yang dapat dicari per outlet.
+- **Guard peran**: semua mutasi data master (kategori, pertanyaan, kolom, tipe jawaban, layanan, warung, kapten) ditolak di view model untuk peran Pegawai; tombol aksi terkait disembunyikan. Sidebar pegawai hanya menampilkan `/checklist`; admin/belum login melihat navigasi penuh (kompatibel dengan alur prototipe).
+
+Catatan penyimpangan kecil dari rencana file awal: pengelolaan kategori dan pertanyaan digabung di `/checklist` dan `/checklist/:categoryId` (tidak ada rute terpisah `/checklist-kategori` dan `/checklist-pertanyaan`), dan CRUD pegawai masih bersifat tampilan sehingga kriteria master pegawai belum dicentang.
 ### Lampiran: Perbandingan PDF Sumber vs Implementasi Sebelum Perbaikan
 
 **Ringkasan temuan:** data seed sebelumnya tidak sesuai dengan PDF sumber pada tiga hal berikut:

@@ -32,11 +32,19 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   )
   const isQuestionRoute = computed(() => route.name === 'question')
 
+  const visibleFavoriteItems = computed(() => {
+    if (authVm.selectedRole === 'employee') {
+      return dashboardVm.view.favoriteItems.filter((item) => item.routePath === '/checklist')
+    }
+
+    return dashboardVm.view.favoriteItems
+  })
+
   const desktopNavigationSections = computed<ShellNavigationSection[]>(() => [
     {
       title: 'Menu Daftar Pertanyaan',
       placement: 'main',
-      items: dashboardVm.view.favoriteItems.map((item) => ({
+      items: visibleFavoriteItems.value.map((item) => ({
         id: item.id,
         label: item.label,
         shortLabel: item.label,

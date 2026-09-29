@@ -29,6 +29,14 @@ export const useChecklistQuestionsByCategoryVm = defineStore('checklistQuestions
     return questionsVm.questionRowsByCategory[categoryId.value] ?? []
   })
 
+  const archivedQuestions = computed<ChecklistQuestionRow[]>(() => {
+    if (!categoryId.value) {
+      return []
+    }
+
+    return questionsVm.archivedQuestionRowsByCategory[categoryId.value] ?? []
+  })
+
   const pageHeading = computed(() =>
     category.value
       ? { title: category.value.name, description: category.value.description }
@@ -45,11 +53,16 @@ export const useChecklistQuestionsByCategoryVm = defineStore('checklistQuestions
     view,
     categoryId,
     category,
+    isMasterEditor: questionsVm.isMasterEditor,
     questions,
+    archivedQuestions,
     pageHeading,
     columns,
     goBack,
     setQuestionModalCategory: questionsVm.setQuestionModalCategory,
-    removeQuestion: questionsVm.removeQuestion
+    removeQuestion: questionsVm.removeQuestion,
+    moveQuestion: questionsVm.moveQuestion,
+    archiveQuestion: questionsVm.archiveQuestion,
+    restoreQuestion: questionsVm.restoreQuestion
   }
 })

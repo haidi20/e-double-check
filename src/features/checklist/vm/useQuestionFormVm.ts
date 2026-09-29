@@ -2,11 +2,13 @@ import { defineStore } from 'pinia'
 import { computed, reactive } from 'vue'
 import { questionFormState } from '@/features/checklist/state/questionFormState'
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
+import { useServicesVm } from '@/features/master-data/services/vm/useServicesVm'
 import type { ChecklistColumn } from '@/features/checklist/type/checklistTypes'
 
 export const useQuestionFormVm = defineStore('questionFormVm', () => {
   const form = reactive({ ...questionFormState })
   const questionsVm = useChecklistQuestionsVm()
+  const servicesVm = useServicesVm()
 
   const fields = computed<ChecklistColumn[]>(() =>
     questionsVm.view.categories.find(
@@ -14,10 +16,16 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
     )?.columns ?? []
   )
 
-  const serviceOptions = computed(() => ['Semua', 'DI', 'TA'])
+  const serviceOptions = computed(() =>
+    servicesVm.view.services
+      .filter((service) => service.status === 'Aktif')
+      .map((service) => ({ value: service.id, label: service.name, detail: service.code }))
+  )
 
   const defaultServiceValue = computed(() =>
-    serviceOptions.value.includes('Semua') ? 'Semua' : serviceOptions.value[0] ?? ''
+    serviceOptions.value.find((option) => option.label === 'Semua')?.value ??
+    serviceOptions.value[0]?.value ??
+    ''
   )
 
   const error = computed(() => questionsVm.view.modal.questionFormError)
@@ -59,7 +67,7 @@ export const useQuestionFormVm = defineStore('questionFormVm', () => {
         }
 
         if (label.includes('layanan')) {
-          return [columnId, question.service]
+          return [columnId, question.serviceId ?? question.service]
         }
 
         if (['item yang dicek', 'langkah', 'item', 'tindakan', 'pertanyaan'].some((keyword) => label.includes(keyword))) {

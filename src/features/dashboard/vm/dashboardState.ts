@@ -465,6 +465,7 @@ export const dashboardState: DashboardState = {
     favoriteItems: [
       { id: "dashboard", label: "Dashboard", icon: "H", routePath: "/dashboard" },
       { id: "questions", label: "Daftar Pertanyaan", icon: "?", routePath: "/checklist" },
+      { id: "checklist-answer-types", label: "Tipe Jawaban", icon: "T", routePath: "/checklist-tipe-jawaban" },
       { id: "services", label: "Layanan", icon: "L", routePath: "/layanan" },
       { id: "outlets", label: "Warung", icon: "O", routePath: "/outlets" },
       { id: "employees", label: "Pegawai", icon: "P", routePath: "/employees" }

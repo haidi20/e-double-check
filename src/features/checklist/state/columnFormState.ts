@@ -3,6 +3,7 @@ import type { ChecklistColumnGridSpan, ChecklistColumnMode, ChecklistColumnType 
 export interface ColumnFormState {
   label: string
   type: ChecklistColumnType
+  answerTypeId: string
   mode: ChecklistColumnMode
   required: boolean
   gridSpan: ChecklistColumnGridSpan
@@ -13,6 +14,7 @@ export interface ColumnFormState {
 export const columnFormState: ColumnFormState = {
   label: '',
   type: 'text',
+  answerTypeId: 'at-text',
   mode: 'read-only',
   required: false,
   gridSpan: 6,

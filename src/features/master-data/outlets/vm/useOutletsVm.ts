@@ -1,17 +1,61 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { outletsState } from '@/features/master-data/outlets/state/outletsState'
+import { useAuthVm } from '@/features/auth/vm/useAuthVm'
 import type { OutletFormField } from '@/features/master-data/outlets/type/outletsTypes'
 
 const statusOptions = ['Aktif', 'Perlu ditinjau', 'Tidak aktif']
+const OUTLETS_STORAGE_KEY = 'master.outlets.v1'
 
 export const useOutletsVm = defineStore('outletsVm', () => {
+  const authVm = useAuthVm()
   const view = reactive({
     ...outletsState.view,
     outlets: [...outletsState.view.outlets],
     formFields: outletsState.view.formFields.map((field) => ({ ...field }))
   })
   const searchQuery = ref('')
+
+  if (typeof localStorage !== 'undefined') {
+    try {
+      const raw = localStorage.getItem(OUTLETS_STORAGE_KEY)
+      const parsed = raw ? JSON.parse(raw) : null
+
+      if (parsed && Array.isArray(parsed.outlets) && parsed.outlets.length) {
+        view.outlets = parsed.outlets
+      }
+
+      if (parsed && Array.isArray(parsed.captainAssignments)) {
+        view.captainAssignments = parsed.captainAssignments
+      }
+    } catch {
+    }
+  }
+
+  watch(
+    () => [view.outlets, view.captainAssignments],
+    () => {
+      if (typeof localStorage === 'undefined') {
+        return
+      }
+
+      localStorage.setItem(OUTLETS_STORAGE_KEY, JSON.stringify({
+        outlets: JSON.parse(JSON.stringify(view.outlets)),
+        captainAssignments: JSON.parse(JSON.stringify(view.captainAssignments))
+      }))
+    },
+    { deep: true }
+  )
+
+  const ensureMasterEditor = () => {
+    if (authVm.selectedRole !== 'employee') {
+      return true
+    }
+
+    view.formError = 'Hanya admin yang dapat mengubah data master.'
+    view.isFormModalOpen = false
+    return false
+  }
 
   const outletRows = computed(() => {
     const query = searchQuery.value.trim().toLowerCase()
@@ -68,6 +112,10 @@ export const useOutletsVm = defineStore('outletsVm', () => {
   }
 
   const saveFormModal = () => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const name = view.formFields.find((field) => field.id === 'name')?.value.trim() ?? ''
     const owner = view.formFields.find((field) => field.id === 'owner')?.value.trim() ?? ''
     const status = view.formFields.find((field) => field.id === 'status')?.value ?? 'Aktif'
@@ -108,11 +156,24 @@ export const useOutletsVm = defineStore('outletsVm', () => {
   }
 
   const deleteOutlet = (outletId: string) => {
+    if (!ensureMasterEditor()) {
+      return
+    }
+
     const index = view.outlets.findIndex((row) => row.id === outletId)
 
     if (index >= 0) {
       view.outlets.splice(index, 1)
     }
+  }
+
+  const activeCaptainName = (outletId: string) => {
+    const assignment = view.captainAssignments
+      .filter((item) => item.outletId === outletId && !item.releasedAt)
+      .slice()
+      .sort((a, b) => b.assignedAt.localeCompare(a.assignedAt))[0]
+
+    return assignment?.employeeName ?? '-'
   }
 
   return {
@@ -124,6 +185,7 @@ export const useOutletsVm = defineStore('outletsVm', () => {
     openEditModal,
     closeFormModal,
     saveFormModal,
-    deleteOutlet
+    deleteOutlet,
+    activeCaptainName
   }
 })

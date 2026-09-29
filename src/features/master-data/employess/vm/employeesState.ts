@@ -230,6 +230,7 @@ export const employeesState: EmployeesState = {
     ],
     employeeRows: [
       {
+        id: "emp-1",
         initials: "BS",
         name: "Budi Santoso",
         role: "Koordinator Gudang",
@@ -237,6 +238,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-2",
         initials: "SW",
         name: "Siti Wahyuni",
         role: "Admin Distribusi",
@@ -244,6 +246,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-3",
         initials: "AP",
         name: "Andi Pratama",
         role: "Kurir Utama",
@@ -251,6 +254,7 @@ export const employeesState: EmployeesState = {
         status: "Dalam tugas"
       },
       {
+        id: "emp-4",
         initials: "RM",
         name: "Rina Melati",
         role: "Staf Dokumen",
@@ -258,6 +262,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-5",
         initials: "DK",
         name: "Dewi Kartika",
         role: "Analis Persediaan",
@@ -265,6 +270,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-6",
         initials: "FN",
         name: "Fajar Nugroho",
         role: "Pengawas Armada",
@@ -272,6 +278,7 @@ export const employeesState: EmployeesState = {
         status: "Dalam tugas"
       },
       {
+        id: "emp-7",
         initials: "NP",
         name: "Nadia Putri",
         role: "Admin Pembayaran",
@@ -279,6 +286,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-8",
         initials: "RS",
         name: "Raka Saputra",
         role: "Supervisor Distribusi",
@@ -286,6 +294,7 @@ export const employeesState: EmployeesState = {
         status: "Aktif"
       },
       {
+        id: "emp-9",
         initials: "ML",
         name: "Maya Lestari",
         role: "Staf Layanan",
@@ -293,6 +302,7 @@ export const employeesState: EmployeesState = {
         status: "Dalam tugas"
       },
       {
+        id: "emp-10",
         initials: "AS",
         name: "Agus Salim",
         role: "Kurir Prioritas",

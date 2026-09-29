@@ -93,13 +93,24 @@ const modalVm = useColumnManagerModalVm()
           </label>
           <div class="checklist-column-form__row">
             <label class="feature-form-modal__field">
-              Tipe data
-              <select v-model="modalVm.formVm.form.type">
-                <option value="text">Teks</option>
-                <option value="number">Angka</option>
-                <option value="boolean">Ya / Tidak</option>
-                <option value="time">Waktu</option>
+              Tipe jawaban
+              <select
+                v-model="modalVm.formVm.form.answerTypeId"
+                @change="modalVm.formVm.syncSelectedAnswerType()"
+              >
+                <option
+                  v-for="option in modalVm.formVm.activeAnswerTypes"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </option>
               </select>
+              <small
+                v-if="modalVm.formVm.selectedAnswerType?.kind === 'select' && modalVm.formVm.selectedAnswerType?.options?.length"
+              >
+                Opsi: {{ modalVm.formVm.selectedAnswerType.options?.join(', ') }}
+              </small>
             </label>
             <label class="feature-form-modal__field">
               Nilai ditentukan oleh

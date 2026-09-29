@@ -45,6 +45,7 @@ export interface GoodsRow {
 }
 
 export interface EmployeeRow {
+  id: string
   initials: string
   name: string
   role: string

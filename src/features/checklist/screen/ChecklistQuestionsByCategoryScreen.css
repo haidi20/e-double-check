@@ -217,3 +217,30 @@
     justify-content: flex-end;
   }
 }
+
+.category-question-archived {
+  border-top: 1px dashed var(--sbm-border);
+  margin-top: 18px;
+  padding-top: 14px;
+}
+
+.category-question-archived ul {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.category-question-archived li {
+  align-items: center;
+  color: var(--sbm-neutral);
+  display: flex;
+  font-size: 0.86rem;
+  justify-content: space-between;
+}
+
+.category-question-archived__actions {
+  display: flex;
+  gap: 8px;
+}

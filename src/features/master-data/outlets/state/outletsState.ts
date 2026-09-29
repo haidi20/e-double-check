@@ -31,6 +31,7 @@ export const outletsState: OutletsState = {
         status: 'Perlu ditinjau'
       }
     ],
+    captainAssignments: [],
     formTitle: 'Tambah warung',
     formSubtitle: 'Formulir Warung',
     formSubmitLabel: 'Simpan Warung',

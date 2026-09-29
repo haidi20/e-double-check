@@ -12,6 +12,12 @@ export const checklistQuestionsState: ChecklistQuestionsState = {
     editingColumnId: null,
     columnFormError: ''
   },
+  categoryModal: {
+    isCategoryModalOpen: false,
+    editingCategoryId: null,
+    categoryFormError: '',
+    actionError: ''
+  },
   categories: [
     {
       id: 'persiapan-shift',

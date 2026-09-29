@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { useChecklistQuestionsVm } from '@/features/checklist/vm/useChecklistQuestionsVm'
+import { useCategoryFormVm } from '@/features/checklist/vm/useCategoryFormVm'
+import CategoryFormModal from '@/features/checklist/screen/CategoryFormModal.vue'
 import ColumnFormModal from '@/features/checklist/screen/ColumnFormModal.vue'
 import { useColumnManagerModalVm } from '@/features/checklist/vm/useColumnManagerModalVm'
 import { usePageShortcuts } from '@/core/composables/usePageShortcuts'
 import { useShortcutsVm } from '@/features/settings/shortcuts/vm/useShortcutsVm'
 
 const vm = useChecklistQuestionsVm()
+const categoryFormVm = useCategoryFormVm()
 const columnManagerModalVm = useColumnManagerModalVm()
 const shortcutsVm = useShortcutsVm()
 
@@ -16,6 +19,28 @@ usePageShortcuts([
 
 <template>
   <main class="feature-screen container-fluid px-3 px-md-4 py-3 py-md-4">
+    <section class="checklist-page-heading">
+      <div>
+        <p class="eyebrow">Daftar Pertanyaan</p>
+        <h2>Kategori Checklist</h2>
+      </div>
+      <button
+        v-if="vm.isMasterEditor"
+        type="button"
+        class="primary-button"
+        @click="categoryFormVm.open()"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Tambah Kategori
+      </button>
+    </section>
+
+    <p v-if="vm.view.categoryModal.actionError" class="checklist-action-error" role="alert">
+      {{ vm.view.categoryModal.actionError }}
+    </p>
+
     <section class="checklist-grid">
       <article
         v-for="category in vm.categoryCards"
@@ -27,6 +52,7 @@ usePageShortcuts([
         <header class="checklist-category-card__header">
           <span class="checklist-category-card__leading">
             <button
+              v-if="vm.isMasterEditor"
               type="button"
               class="checklist-category-card__toggle"
               :aria-pressed="category.isVisible"
@@ -50,17 +76,63 @@ usePageShortcuts([
               </svg>
             </span>
           </span>
-          <button
-            type="button"
+          <span v-if="vm.isMasterEditor" class="checklist-category-card__actions">
+            <button
+              type="button"
               class="checklist-category-card__add"
-            aria-label="Kelola kolom"
-            title="Kelola kolom kategori"
-            @click.stop="columnManagerModalVm.open(category.id)"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-          </button>
+              aria-label="Kelola kolom"
+              title="Kelola kolom kategori"
+              @click.stop="columnManagerModalVm.open(category.id)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="checklist-category-card__add"
+              aria-label="Ubah kategori"
+              title="Ubah nama atau deskripsi kategori"
+              @click.stop="categoryFormVm.open(category.id)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="checklist-category-card__add"
+              aria-label="Naikkan kategori"
+              title="Urutkan ke atas"
+              @click.stop="vm.moveCategory(category.id, 'up')"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m18 15-6-6-6 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="checklist-category-card__add"
+              aria-label="Turunkan kategori"
+              title="Urutkan ke bawah"
+              @click.stop="vm.moveCategory(category.id, 'down')"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="checklist-category-card__add"
+              aria-label="Arsipkan kategori"
+              title="Arsipkan kategori"
+              @click.stop="vm.archiveCategory(category.id)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4" />
+              </svg>
+            </button>
+          </span>
         </header>
 
         <div class="checklist-category-card__body">
@@ -99,6 +171,27 @@ usePageShortcuts([
       </article>
     </section>
 
+    <section v-if="vm.archivedCategoryCards.length" class="checklist-archived-section">
+      <h3>Arsip Kategori</h3>
+      <ul class="checklist-archived-list">
+        <li v-for="category in vm.archivedCategoryCards" :key="category.id">
+          <div>
+            <strong>{{ category.name }}</strong>
+            <small>{{ category.questionCount }} pertanyaan</small>
+          </div>
+          <span v-if="vm.isMasterEditor" class="checklist-archived-list__actions">
+            <button type="button" class="ghost-button" @click="vm.restoreCategory(category.id)">
+              Pulihkan
+            </button>
+            <button type="button" class="ghost-button" @click="vm.deleteCategory(category.id)">
+              Hapus
+            </button>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <CategoryFormModal />
     <ColumnFormModal />
   </main>
 </template>
