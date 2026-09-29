@@ -107,10 +107,6 @@ const shortcutHint = (screenId: string) => {
               </svg>
             </span>
             {{ item.shortLabel ?? item.label }}
-            <kbd
-              v-if="shortcutsVm.getBindingFor(`nav.${item.id}`)"
-              class="app-sidebar__shortcut-hint"
-            >{{ shortcutsVm.getBindingFor(`nav.${item.id}`) }}</kbd>
           </RouterLink>
         </section>
       </nav>
