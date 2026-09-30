@@ -1,5 +1,6 @@
 - http://localhost:5173/checklist
 - http://localhost:5173/checklist/persiapan-shift
+- url: https://e-double-check.vercel.app/
 
 # Analisis, Perencanaan, dan Implementasi
 ## Digitalisasi Checklist Anti Ketinggalan Nasi, Sambal, Ayam, dan Ganje
