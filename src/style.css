@@ -70,6 +70,10 @@ button {
   font: inherit;
 }
 
+* {
+  font-weight: 400 !important;
+}
+
 .app-layout {
   background: var(--sbm-tertiary);
   color: var(--sbm-ink);
