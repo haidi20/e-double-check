@@ -9,3 +9,4 @@ vite-check.log
 .vscode/mcp.local.json
 .codex/
 .tmp/
+test-results/

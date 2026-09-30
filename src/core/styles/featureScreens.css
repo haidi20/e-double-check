@@ -410,7 +410,7 @@
 .checklist-category-card__leading {
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .checklist-category-card__header {
@@ -424,20 +424,21 @@
   background: var(--sbm-tertiary);
   border-radius: 12px;
   display: flex;
-  height: 36px;
+  height: 32px;
   justify-content: center;
-  width: 36px;
+  width: 32px;
 }
 
 .checklist-category-card__icon svg {
   color: var(--sbm-primary);
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
 }
 
 .checklist-category-card__actions {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  max-width: 100%;
 }
 
 .checklist-category-card__add {
@@ -448,10 +449,10 @@
   color: var(--sbm-primary);
   cursor: pointer;
   display: flex;
-  height: 28px;
+  height: 24px;
   justify-content: center;
   transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-  width: 28px;
+  width: 24px;
 }
 
 .checklist-category-card__add:hover {
@@ -478,10 +479,10 @@
   color: var(--sbm-neutral);
   cursor: pointer;
   display: flex;
-  height: 36px;
+  height: 28px;
   justify-content: center;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  width: 36px;
+  width: 28px;
 }
 
 .checklist-category-card__toggle:hover {
@@ -491,8 +492,8 @@
 }
 
 .checklist-category-card__toggle svg {
-  height: 17px;
-  width: 17px;
+  height: 15px;
+  width: 15px;
 }
 
 .checklist-category-card__body {
@@ -2056,7 +2057,8 @@
   border-bottom: 2px solid transparent;
   color: var(--sbm-neutral);
   font-weight: 800;
-  padding: 12px 14px;
+  min-height: 36px;
+  padding: 8px 12px;
   white-space: nowrap;
 }
 
@@ -2284,6 +2286,7 @@
   .button-row,
   .button-row > button {
     width: 100%;
+    max-width: 280px;
   }
 
   .toolbar {
