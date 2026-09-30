@@ -712,8 +712,17 @@
 
 .checklist-page-heading .primary-button {
   align-items: center;
+  border-radius: 8px;
   display: inline-flex;
-  gap: 8px;
+  font-size: 0.78rem;
+  gap: 6px;
+  min-height: var(--sbm-control-sm);
+  padding: 0 10px;
+}
+
+.checklist-page-heading .primary-button svg {
+  height: 13px;
+  width: 13px;
 }
 
 .checklist-action-error {
