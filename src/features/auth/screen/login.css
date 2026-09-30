@@ -181,14 +181,14 @@
   border-radius: var(--lv-radius-full);
   color: var(--lv-primary, #003d79);
   display: grid;
-  height: 52px;
+  height: 46px;
   place-items: center;
-  width: 52px;
+  width: 46px;
 }
 
 .login-role-card__icon svg {
-  height: 26px;
-  width: 26px;
+  height: 23px;
+  width: 23px;
 }
 
 .login-role-card strong {
@@ -208,12 +208,12 @@
   border: none;
   border-radius: var(--lv-radius-full, 999px);
   color: var(--lv-surface);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 800;
   letter-spacing: 0.01em;
   margin-top: auto;
-  min-height: 52px;
-  padding: 0 24px;
+  min-height: 46px;
+  padding: 0 20px;
   transition: background 0.2s ease, opacity 0.2s ease;
   width: 100%;
 }

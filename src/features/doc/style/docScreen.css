@@ -160,8 +160,8 @@
   font-weight: 850;
   justify-content: center;
   letter-spacing: 0.02em;
-  min-height: 40px;
-  padding: 10px 16px;
+  min-height: 36px;
+  padding: 7px 13px;
   transition:
     box-shadow 160ms ease,
     transform 160ms ease;

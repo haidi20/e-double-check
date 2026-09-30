@@ -23,9 +23,9 @@
 .page-heading {
   align-items: flex-start;
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: space-between;
-  padding: 24px;
+  padding: 18px 20px;
 }
 
 .page-heading p,
@@ -57,7 +57,7 @@
 
 .feature-screen h2 {
   color: var(--sbm-primary);
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1.2;
   margin-bottom: 10px;
 }
@@ -71,9 +71,10 @@
 .primary-button,
 .ghost-button {
   border-radius: 8px;
+  font-size: 0.86rem;
   font-weight: 700;
-  min-height: 40px;
-  padding: 0 16px;
+  min-height: var(--sbm-control-md);
+  padding: 0 13px;
 }
 
 .primary-button {
@@ -423,15 +424,15 @@
   background: var(--sbm-tertiary);
   border-radius: 12px;
   display: flex;
-  height: 44px;
+  height: 36px;
   justify-content: center;
-  width: 44px;
+  width: 36px;
 }
 
 .checklist-category-card__icon svg {
   color: var(--sbm-primary);
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
 }
 
 .checklist-category-card__actions {
@@ -473,14 +474,14 @@
   align-items: center;
   background: transparent;
   border: 1px solid var(--sbm-border);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--sbm-neutral);
   cursor: pointer;
   display: flex;
-  height: 44px;
+  height: 36px;
   justify-content: center;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-  width: 44px;
+  width: 36px;
 }
 
 .checklist-category-card__toggle:hover {
@@ -650,7 +651,7 @@
   font-size: 0.84rem;
   font-weight: 800;
   gap: 8px;
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
   white-space: nowrap;
 }
 
@@ -767,6 +768,12 @@
 .checklist-archived-list__actions {
   display: flex;
   gap: 8px;
+}
+
+.checklist-archived-list__actions .ghost-button {
+  font-size: 0.78rem;
+  min-height: var(--sbm-control-sm);
+  padding: 0 10px;
 }
 
 @media (max-width: 1023.98px) {
@@ -902,7 +909,7 @@
   background: transparent;
   border: 0;
   color: var(--sbm-ink);
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
   min-width: 0;
   outline: 0;
   width: 100%;
@@ -930,7 +937,7 @@
 
 .operation-form textarea {
   min-height: 108px;
-  padding: 12px;
+  padding: 8px 12px;
   resize: vertical;
 }
 
@@ -1017,13 +1024,15 @@
 .table-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   justify-content: flex-end;
 }
 
 .table-actions .ghost-button {
-  min-height: 34px;
-  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  min-height: var(--sbm-control-sm);
+  padding: 0 10px;
 }
 
 .delivery-order-invoices {
@@ -1164,7 +1173,7 @@
   border: 1px solid var(--sbm-border);
   border-radius: 8px;
   color: var(--sbm-ink);
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
   min-width: 0;
   outline: 0;
   padding: 0 12px;
@@ -1214,7 +1223,7 @@
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
   min-width: 0;
   outline: 0;
   padding: 0 12px;
@@ -1381,7 +1390,7 @@
 }
 
 .manual-item-row > .ghost-button {
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
 }
 
 .return-items-table {

@@ -41,6 +41,7 @@ export const useAppVm = defineStore('appVm', () => {
   const activeScreenId = computed(() => activeScreen.value.id)
 
   const isNavigationActive = (screenId: string) => activeScreen.value.id === screenId
+  const isNavigationRouteActive = (routePath: string) => activeScreen.value.routePath === routePath
 
   const openMobileMenu = () => {
     isMobileMenuOpen.value = true
@@ -77,6 +78,7 @@ export const useAppVm = defineStore('appVm', () => {
     closeMobileMenu,
     isMobileMenuOpen,
     isNavigationActive,
+    isNavigationRouteActive,
     navigationSections,
     openMobileMenu,
     setActiveScreen,

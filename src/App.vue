@@ -88,7 +88,7 @@ const shortcutHint = (screenId: string) => {
             v-for="item in section.items"
             :key="item.id"
             :to="item.routePath"
-            :class="['dashboard-sidebar-link--' + item.id, { 'is-active': vm.isNavigationActive(item.id) }]"
+            :class="['dashboard-sidebar-link--' + item.id, { 'is-active': vm.isNavigationRouteActive(item.routePath) }]"
             :title="shortcutHint(item.id)"
             :aria-keyshortcuts="shortcutsVm.getBindingFor(`nav.${item.id}`) ?? undefined"
             @click="vm.closeMobileMenu"

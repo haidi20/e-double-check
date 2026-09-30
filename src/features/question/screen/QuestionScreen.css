@@ -617,8 +617,8 @@
   cursor: pointer;
   font-size: 0.78rem;
   font-weight: 850;
-  min-height: 38px;
-  padding: 0 18px;
+  min-height: 36px;
+  padding: 0 14px;
   white-space: nowrap;
 }
 
@@ -847,7 +847,7 @@
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 800;
-  min-height: 40px;
+  min-height: 36px;
   width: 100%;
 }
 

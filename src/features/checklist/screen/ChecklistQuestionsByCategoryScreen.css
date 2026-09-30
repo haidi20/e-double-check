@@ -1,7 +1,7 @@
 .category-question-heading__actions {
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .category-question-heading__actions .ghost-button,
@@ -9,15 +9,15 @@
   align-items: center;
   border-radius: 999px;
   display: inline-flex;
-  font-size: 11.5px;
+  font-size: 0.75rem;
   gap: 6px;
-  min-height: 30px;
-  padding: 5px 9px;
+  min-height: var(--sbm-control-sm);
+  padding: 0 10px;
 }
 
 .category-question-heading__actions svg {
-  height: 13px;
-  width: 13px;
+  height: 14px;
+  width: 14px;
 }
 
 .category-question-panel {

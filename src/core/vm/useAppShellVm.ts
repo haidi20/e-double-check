@@ -68,6 +68,7 @@ export const useAppShellVm = defineStore('appShellVm', () => {
   )
 
   const isNavigationActive = (screenId: string) => appVm.isNavigationActive(screenId)
+  const isNavigationRouteActive = (routePath: string) => appVm.isNavigationRouteActive(routePath)
   const closeMobileMenu = () => appVm.closeMobileMenu()
   const toggleMobileMenu = () => appVm.toggleMobileMenu()
 
@@ -104,6 +105,7 @@ export const useAppShellVm = defineStore('appShellVm', () => {
     isQuestionRoute,
     desktopNavigationSections,
     isNavigationActive,
+    isNavigationRouteActive,
     closeMobileMenu,
     toggleMobileMenu,
     toggleProfileMenu,

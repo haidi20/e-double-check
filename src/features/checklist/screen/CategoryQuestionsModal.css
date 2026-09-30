@@ -111,7 +111,7 @@
   cursor: pointer;
   display: flex;
   gap: 10px;
-  min-height: 42px;
+  min-height: var(--sbm-control-md);
   padding: 0 12px;
 }
 
@@ -142,9 +142,9 @@
 
 .category-questions-modal__footer button {
   border-radius: 10px;
-  font-size: 0.84rem;
-  min-height: 38px;
-  padding: 0 18px;
+  font-size: 0.86rem;
+  min-height: var(--sbm-control-md);
+  padding: 0 14px;
 }
 
 @media (max-width: 767.98px) {
